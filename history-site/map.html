@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>戦場マップ | 城塞 読書補助サイト</title>
+  <meta name="description" content="大阪の陣の戦場マップ。大阪城・真田丸・茶臼山・天王寺・道明寺などの主要地点を自作図で解説。">
+  <link rel="canonical" href="REPLACE_WITH_REAL_URL">
+  <meta property="og:title" content="戦場マップ | 城塞 読書補助サイト">
+  <meta property="og:description" content="大阪の陣の戦場マップ。主要地点を自作図で解説。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="REPLACE_WITH_REAL_URL">
+  <meta property="og:image" content="REPLACE_WITH_REAL_DOMAIN/assets/img/ogp.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .map-location { cursor: help; }
+    .map-location:hover .marker-bg { opacity: 0.85; }
+    .marker-castle { fill: #5c1818; stroke: #c9a84c; stroke-width: 2; }
+    .marker-fort   { fill: #3a2c18; stroke: #c9a84c; stroke-width: 1.5; }
+    .marker-battle { fill: #1a2e50; stroke: #7aaa8a; stroke-width: 1.5; }
+    .place-label   { font-family: 'Noto Serif JP', serif; font-size: 11px; fill: #f0e8d0; text-anchor: middle; }
+    .place-sub     { font-family: 'Noto Serif JP', serif; font-size: 9px; fill: #a08870; text-anchor: middle; }
+    .terrain-land  { fill: #1e1608; }
+    .terrain-river { fill: rgba(40,80,130,0.35); stroke: rgba(60,120,200,0.3); stroke-width: 1; }
+    .army-toyotomi { stroke: #8b2020; stroke-width: 2; fill: none; stroke-dasharray: 8 4; }
+    .army-tokugawa { stroke: #1a5090; stroke-width: 2; fill: none; stroke-dasharray: 8 4; }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">本文へスキップ</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo">城塞 読書補助</a>
+      <button class="nav-toggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="site-nav" id="site-nav" aria-label="メインナビゲーション">
+    <ul></ul>
+  </nav>
+
+  <main class="page-main" id="main-content">
+    <div class="container">
+
+      <div class="page-hero">
+        <span class="page-hero-eyebrow">Battle Map</span>
+        <h1 class="page-hero-title">戦場マップ</h1>
+        <p class="page-hero-sub">大阪の陣（冬の陣・夏の陣）の主要な場所を自作図で整理しています。各地点にマウスを乗せると説明が表示されます。</p>
+      </div>
+
+      <article class="page-content">
+
+        <div class="info-box">
+          <strong>凡例：</strong>
+          <span style="color:#c9a84c;">▲ 城・居城</span>&emsp;
+          <span style="color:#c9a84c;">■ 砦・陣地</span>&emsp;
+          <span style="color:#7aaa8a;">● 主な戦闘地</span>&emsp;
+          ※この図は位置関係を概略的に示した自作のイメージ図です。
+        </div>
+
+        <div class="map-wrap" style="margin: 1.5rem 0;">
+          <div class="map-tooltip"></div>
+
+          <div class="svg-container">
+            <svg id="battle-map" viewBox="0 0 700 560"
+                 role="img" aria-label="大阪の陣 戦場マップ — 大阪城・真田丸・茶臼山・天王寺・道明寺などの位置関係図"
+                 xmlns="http://www.w3.org/2000/svg"
+                 style="width: 100%; height: auto; min-width: 560px;">
+
+              <!-- 背景 -->
+              <rect width="700" height="560" fill="#14100a"/>
+
+              <!-- 方角 -->
+              <text x="350" y="20" style="font-family: 'Noto Serif JP',serif; font-size:10px; fill:#5a4535; text-anchor:middle; letter-spacing:0.1em;">北</text>
+              <text x="350" y="548" style="font-family: 'Noto Serif JP',serif; font-size:10px; fill:#5a4535; text-anchor:middle; letter-spacing:0.1em;">南</text>
+              <text x="12" y="284" style="font-family: 'Noto Serif JP',serif; font-size:10px; fill:#5a4535; text-anchor:middle;">西</text>
+              <text x="688" y="284" style="font-family: 'Noto Serif JP',serif; font-size:10px; fill:#5a4535; text-anchor:middle;">東</text>
+
+              <!-- 淀川（北側） -->
+              <path class="terrain-river" d="M 0,60 Q 200,50 350,70 Q 500,90 700,65 L 700,90 Q 500,110 350,95 Q 200,80 0,85 Z"/>
+              <text x="350" y="76" style="font-family: 'Noto Serif JP',serif; font-size:9px; fill:rgba(100,150,220,0.7); text-anchor:middle;">淀 川</text>
+
+              <!-- 大和川（南側） -->
+              <path class="terrain-river" d="M 0,480 Q 200,475 400,488 Q 550,498 700,480 L 700,500 Q 550,516 400,506 Q 200,494 0,498 Z"/>
+              <text x="350" y="492" style="font-family: 'Noto Serif JP',serif; font-size:9px; fill:rgba(100,150,220,0.7); text-anchor:middle;">大 和 川</text>
+
+              <!-- 城の外堀 (概略) -->
+              <rect x="280" y="120" width="180" height="160" rx="8" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <!-- 軍の動き：夏の陣（略図） -->
+              <defs>
+                <marker id="arrow-t" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#1a5090" opacity="0.6"/>
+                </marker>
+                <marker id="arrow-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#8b2020" opacity="0.6"/>
+                </marker>
+              </defs>
+              <!-- 徳川の動き：南から北へ包囲 -->
+              <path class="army-tokugawa" d="M 150,450 C 150,380 260,350 350,330" marker-end="url(#arrow-t)" opacity="0.5"/>
+              <path class="army-tokugawa" d="M 560,450 C 560,380 470,350 420,320" marker-end="url(#arrow-t)" opacity="0.5"/>
+
+              <!-- ── 地点マーカー ── -->
+
+              <!-- 大阪城 -->
+              <g class="map-location" data-name="大阪城" transform="translate(350,200)">
+                <polygon class="marker-castle" points="0,-22 20,5 -20,5" />
+                <text class="place-label" x="0" y="24">大 阪 城</text>
+                <text class="place-sub"   x="0" y="37">豊臣家の居城</text>
+              </g>
+
+              <!-- 真田丸 -->
+              <g class="map-location" data-name="真田丸" transform="translate(330,310)">
+                <rect class="marker-fort" x="-16" y="-14" width="32" height="28" rx="2"/>
+                <text class="place-label" x="0" y="26">真田丸</text>
+                <text class="place-sub"   x="0" y="38">冬の陣・出丸</text>
+              </g>
+
+              <!-- 茶臼山 -->
+              <g class="map-location" data-name="茶臼山" transform="translate(220,380)">
+                <rect class="marker-fort" x="-16" y="-14" width="32" height="28" rx="2"/>
+                <text class="place-label" x="0" y="26">茶臼山</text>
+                <text class="place-sub"   x="0" y="38">家康本陣（夏）</text>
+              </g>
+
+              <!-- 天王寺 -->
+              <g class="map-location" data-name="天王寺" transform="translate(310,420)">
+                <circle class="marker-battle" cx="0" cy="0" r="14"/>
+                <text class="place-label" x="0" y="26">天王寺</text>
+                <text class="place-sub"   x="0" y="38">最終決戦地</text>
+              </g>
+
+              <!-- 道明寺 -->
+              <g class="map-location" data-name="道明寺" transform="translate(500,420)">
+                <circle class="marker-battle" cx="0" cy="0" r="14"/>
+                <text class="place-label" x="0" y="26">道明寺</text>
+                <text class="place-sub"   x="0" y="38">5/6の戦闘地</text>
+              </g>
+
+              <!-- 八尾・若江 -->
+              <g class="map-location" data-name="八尾・若江" transform="translate(580,350)">
+                <circle class="marker-battle" cx="0" cy="0" r="13"/>
+                <text class="place-label" x="0" y="26">八尾・若江</text>
+                <text class="place-sub"   x="0" y="38">5/6の戦闘地</text>
+              </g>
+
+              <!-- 凡例 -->
+              <g transform="translate(16, 510)">
+                <polygon points="0,-10 9,4 -9,4" fill="#5c1818" stroke="#c9a84c" stroke-width="1.5"/>
+                <text x="14" y="4" style="font-family:'Noto Serif JP',serif; font-size:9px; fill:#a08870;">城・居城</text>
+                <rect x="60" y="-10" width="18" height="14" rx="1" fill="#3a2c18" stroke="#c9a84c" stroke-width="1.5"/>
+                <text x="84" y="4" style="font-family:'Noto Serif JP',serif; font-size:9px; fill:#a08870;">砦・陣地</text>
+                <circle cx="138" cy="-3" r="8" fill="#1a2e50" stroke="#7aaa8a" stroke-width="1.5"/>
+                <text x="152" y="4" style="font-family:'Noto Serif JP',serif; font-size:9px; fill:#a08870;">主な戦闘地</text>
+                <line x1="220" y1="-3" x2="250" y2="-3" stroke="#1a5090" stroke-width="1.5" stroke-dasharray="6 3"/>
+                <text x="256" y="4" style="font-family:'Noto Serif JP',serif; font-size:9px; fill:#a08870;">徳川軍の動き（概略）</text>
+              </g>
+
+            </svg>
+          </div>
+        </div>
+
+        <div class="info-box">
+          ※この図は位置関係を概略的に示した自作のイメージ図です。実際の距離・地形とは異なります。
+          史実の詳細は<a href="timeline.html">年表</a>・<a href="locations.html">舞台地まとめ</a>もあわせてご参照ください。
+        </div>
+
+        <section style="margin-top: 2.5rem;">
+          <h2 class="section-title">地点別の解説</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>地点名</th>
+                  <th>大阪の陣での意味</th>
+                  <th>関連する戦い</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>大阪城</strong></td>
+                  <td>豊臣家の居城。冬の陣・夏の陣ともに豊臣方の拠点となった</td>
+                  <td>両陣共通の中心地</td>
+                </tr>
+                <tr>
+                  <td><strong>真田丸</strong></td>
+                  <td>冬の陣で真田信繁が築いた出丸。前田利常らの幕府軍を撃退した</td>
+                  <td>冬の陣（1614年11月）</td>
+                </tr>
+                <tr>
+                  <td><strong>茶臼山</strong></td>
+                  <td>夏の陣で徳川家康が本陣を置いた丘</td>
+                  <td>夏の陣（1615年5月7日）</td>
+                </tr>
+                <tr>
+                  <td><strong>天王寺</strong></td>
+                  <td>夏の陣最大の決戦地。豊臣方は最終的に敗北した</td>
+                  <td>天王寺・岡山の戦い（5月7日）</td>
+                </tr>
+                <tr>
+                  <td><strong>道明寺</strong></td>
+                  <td>後藤又兵衛が徳川方と激戦。後藤はここで戦死した</td>
+                  <td>道明寺・誉田の戦い（5月6日）</td>
+                </tr>
+                <tr>
+                  <td><strong>八尾・若江</strong></td>
+                  <td>長宗我部盛親・木村重成らが戦った地域</td>
+                  <td>八尾・若江の戦い（5月6日）</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="page-meta">
+          <p class="page-summary">大阪の陣の主要地点を自作図で解説しています。各地点とその歴史的意味をまとめました。</p>
+          <nav class="related-pages" aria-label="関連ページ">
+            <h2>関連ページ</h2>
+            <ul>
+              <li><a href="timeline.html">大阪の陣の年表を見る</a></li>
+              <li><a href="locations.html">舞台地の詳細を確認する</a></li>
+              <li><a href="characters.html">登場人物の解説を見る</a></li>
+            </ul>
+          </nav>
+          <p class="last-updated">最終更新: <time datetime="2026-03-08">2026年3月8日</time></p>
+        </aside>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-copy">&copy; 2026 城塞 読書補助サイト</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
