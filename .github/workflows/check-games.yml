@@ -10,6 +10,8 @@ on:
     paths:
       # games.js が変更されたときだけ実行（他のファイルは無視）
       - "**/games.js"
+  # GitHub の Actions タブから「Run workflow」ボタンで手動実行できるようにする
+  workflow_dispatch:
 
 jobs:
   validate:
