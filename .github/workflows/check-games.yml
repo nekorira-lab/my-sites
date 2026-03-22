@@ -67,14 +67,30 @@ jobs:
           for (const file of files) {
             console.log(`\n📄 チェック中: ${file}`);
 
-            // --- games.js を読み込んで GAME_DATA を取り出す ---
+            // --- games.js を読み込んで配列データを取り出す ---
             // games.js は JSON ではなく JS ファイルなので、
-            // Node.js の Function を使って安全に評価する
+            // Node.js の Function を使って安全に評価する。
+            //
+            // 変数名（例: games, GAME_DATA など）はファイルによって異なる可能性があるため、
+            // ファイルの先頭付近にある "const 変数名 = [" という定義を正規表現で探し、
+            // その変数名を使ってデータを取り出す。
             let data;
             try {
               const src = fs.readFileSync(file, "utf-8");
-              // "const GAME_DATA = [...]; " の形を想定して評価し、配列を返す
-              const fn = new Function(src + "\nreturn GAME_DATA;");
+
+              // "const games = [" や "const GAME_DATA = [" のような行から変数名を取得する
+              const match = src.match(/^\s*const\s+(\w+)\s*=/m);
+              if (!match) {
+                throw new Error(
+                  'ファイル内に "const 変数名 = [" 形式の定義が見つかりません。' +
+                  "games.js の先頭に `const games = [` のような記述が必要です。"
+                );
+              }
+              const varName = match[1]; // 例: "games"
+              console.log(`  ℹ️  変数名: ${varName}`);
+
+              // ファイル全体を評価し、見つけた変数名の値を返す
+              const fn = new Function(src + `\nreturn ${varName};`);
               data = fn();
             } catch (e) {
               console.error(`  ❌ ファイルの読み込みまたは評価に失敗しました: ${e.message}`);
@@ -84,7 +100,7 @@ jobs:
 
             // --- 配列であることを確認 ---
             if (!Array.isArray(data)) {
-              console.error("  ❌ GAME_DATA が配列ではありません");
+              console.error("  ❌ データが配列ではありません（games.js の変数が配列を返しているか確認してください）");
               hasError = true;
               continue;
             }
