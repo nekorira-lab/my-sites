@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch"
+    ],
+    "additionalDirectories": [
+      "e:\\AI\\claude\\.claude\\projects\\works\\my-sites\\game-calendar-site",
+      "e:\\AI\\claude\\.claude\\projects\\works\\my-sites\\.github"
+    ]
+  }
+}

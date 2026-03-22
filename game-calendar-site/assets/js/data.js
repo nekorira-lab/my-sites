@@ -68,10 +68,39 @@ const GAME_DATA = [
 
   // 6月
   {
+    id: 'sw2-hardware',
+    title: 'Nintendo Switch 2 本体発売',
+    date: '2025-06-05',
+    platforms: ['SW2'],
+    genre: GENRES.HARDWARE,
+    note: null,
+    highlight: true,
+  },
+  {
+    id: 'mario-kart-world',
+    title: 'マリオカート ワールド',
+    date: '2025-06-05',
+    platforms: ['SW2'],
+    genre: GENRES.RACE,
+    note: 'Switch 2 ローンチタイトル',
+    highlight: true,
+  },
+  {
     id: 'death-stranding-2',
     title: 'デス・ストランディング 2',
     date: '2025-06-26',
     platforms: ['PS5'],
+    genre: GENRES.ACTION,
+    note: null,
+    highlight: true,
+  },
+
+  // 7月
+  {
+    id: 'dk-bananza',
+    title: 'ドンキーコング バナンザ',
+    date: '2025-07-17',
+    platforms: ['SW2'],
     genre: GENRES.ACTION,
     note: null,
     highlight: true,
@@ -101,7 +130,7 @@ const GAME_DATA = [
     id: 'pokemon-legends-za',
     title: 'ポケットモンスター レジェンズ Z-A',
     date: '2025-10-16',
-    platforms: ['SW1'],
+    platforms: ['SW1', 'SW2'],
     genre: GENRES.RPG,
     note: null,
     highlight: true,
@@ -120,35 +149,25 @@ const GAME_DATA = [
 
   /* ═══════════════ 2026年 ═══════════════════════════════ */
 
-  // 6月
+  // 4月
   {
-    id: 'sw2-hardware',
-    title: 'Nintendo Switch 2 本体発売',
-    date: '2026-06-05',
+    id: 'tomodachi-collection',
+    title: 'トモダチコレクション わくわく生活',
+    date: '2026-04-16',
     platforms: ['SW2'],
-    genre: GENRES.HARDWARE,
+    genre: GENRES.ADVENTURE,
     note: null,
-    highlight: true,
-  },
-  {
-    id: 'mario-kart-world',
-    title: 'マリオカート ワールド',
-    date: '2026-06-05',
-    platforms: ['SW2'],
-    genre: GENRES.RACE,
-    note: 'Switch 2 ローンチタイトル',
     highlight: true,
   },
 
-  // 7月
+  // 5月
   {
-    id: 'dk-bananza',
-    title: 'ドンキーコング バナンザ',
-    date: '2026-07-17',
+    id: 'indiana-jones-sw2',
+    title: 'インディ・ジョーンズ アンド ザ グレートサークル',
+    date: '2026-05-12',
     platforms: ['SW2'],
     genre: GENRES.ACTION,
-    note: null,
-    highlight: true,
+    note: 'Switch 2版',
   },
 
   // 11月
@@ -181,27 +200,11 @@ const GAME_DATA = [
     highlight: true,
   },
   {
-    id: 'indiana-jones-sw2',
-    title: 'インディ・ジョーンズ アンド ザ グレートサークル',
-    date: null,
-    platforms: ['SW2'],
-    genre: GENRES.ACTION,
-    note: 'Switch 2版 2026年内発売予定',
-  },
-  {
     id: 'rhythm-heaven-stars',
     title: 'リズム天国 ミラクルスターズ',
     date: null,
     platforms: ['SW1', 'SW2'],
     genre: GENRES.RHYTHM,
-    note: '2026年内 発売予定',
-  },
-  {
-    id: 'tomodachi-collection',
-    title: 'トモダチコレクション わくわく生活',
-    date: null,
-    platforms: ['SW2'],
-    genre: GENRES.ADVENTURE,
     note: '2026年内 発売予定',
   },
   {

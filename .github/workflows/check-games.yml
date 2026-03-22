@@ -1,0 +1,156 @@
+# ============================================================
+# check-games.yml
+# games.js が変更されたときに自動で内容をチェックするワークフロー
+# ============================================================
+
+name: Check games.js
+
+on:
+  push:
+    paths:
+      # games.js が変更されたときだけ実行（他のファイルは無視）
+      - "**/games.js"
+
+jobs:
+  validate:
+    name: Validate games.js
+    runs-on: ubuntu-latest
+
+    steps:
+      # リポジトリのコードを取得する
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # games.js の中身を検証する
+      - name: Validate games.js
+        run: |
+          node - <<'EOF'
+          const fs = require("fs");
+          const path = require("path");
+
+          // ------------------------------------------------
+          // 1. ファイルを探す
+          // ------------------------------------------------
+          function findFiles(dir, name, results = []) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              // .git ディレクトリは除外する
+              if (entry.name === ".git") continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) {
+                findFiles(full, name, results);
+              } else if (entry.name === name) {
+                results.push(full);
+              }
+            }
+            return results;
+          }
+
+          const files = findFiles(".", "games.js");
+
+          if (files.length === 0) {
+            console.error("❌ games.js が見つかりません");
+            process.exit(1);
+          }
+
+          // ------------------------------------------------
+          // 2. 各ファイルを検証する
+          // ------------------------------------------------
+
+          // platforms で使える値の一覧
+          const VALID_PLATFORMS = ["SW1", "SW2", "PS5", "PS4", "XBX", "PC", "MULTI"];
+
+          // 必須フィールド（値が null でもフィールド自体は必要）
+          const REQUIRED_FIELDS = ["id", "title", "date", "platforms", "genre", "highlight"];
+
+          let hasError = false;
+
+          for (const file of files) {
+            console.log(`\n📄 チェック中: ${file}`);
+
+            // --- games.js を読み込んで GAME_DATA を取り出す ---
+            // games.js は JSON ではなく JS ファイルなので、
+            // Node.js の Function を使って安全に評価する
+            let data;
+            try {
+              const src = fs.readFileSync(file, "utf-8");
+              // "const GAME_DATA = [...]; " の形を想定して評価し、配列を返す
+              const fn = new Function(src + "\nreturn GAME_DATA;");
+              data = fn();
+            } catch (e) {
+              console.error(`  ❌ ファイルの読み込みまたは評価に失敗しました: ${e.message}`);
+              hasError = true;
+              continue;
+            }
+
+            // --- 配列であることを確認 ---
+            if (!Array.isArray(data)) {
+              console.error("  ❌ GAME_DATA が配列ではありません");
+              hasError = true;
+              continue;
+            }
+
+            console.log(`  ℹ️  ${data.length} 件のエントリを確認します`);
+
+            // --- 各エントリを確認 ---
+            for (let i = 0; i < data.length; i++) {
+              const item = data[i];
+              const label = item.id ? `id="${item.id}"` : `インデックス ${i}`;
+
+              // 必須フィールドの存在確認
+              for (const field of REQUIRED_FIELDS) {
+                if (!(field in item)) {
+                  console.error(`  ❌ [${label}] フィールド "${field}" がありません`);
+                  hasError = true;
+                }
+              }
+
+              // date は "YYYY-MM-DD" 形式または null
+              if ("date" in item && item.date !== null) {
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(item.date)) {
+                  console.error(
+                    `  ❌ [${label}] date の形式が不正です: "${item.date}" (例: "2026-03-26" または null)`
+                  );
+                  hasError = true;
+                }
+              }
+
+              // platforms は配列で、値が許可リストに含まれているか
+              if ("platforms" in item) {
+                if (!Array.isArray(item.platforms) || item.platforms.length === 0) {
+                  console.error(`  ❌ [${label}] platforms は空でない配列である必要があります`);
+                  hasError = true;
+                } else {
+                  for (const p of item.platforms) {
+                    if (!VALID_PLATFORMS.includes(p)) {
+                      console.error(
+                        `  ❌ [${label}] platforms に不正な値があります: "${p}"` +
+                        ` (許可値: ${VALID_PLATFORMS.join(", ")})`
+                      );
+                      hasError = true;
+                    }
+                  }
+                }
+              }
+
+              // highlight は boolean
+              if ("highlight" in item && typeof item.highlight !== "boolean") {
+                console.error(`  ❌ [${label}] highlight は true または false である必要があります`);
+                hasError = true;
+              }
+            }
+
+            if (!hasError) {
+              console.log("  ✅ 問題ありません");
+            }
+          }
+
+          // ------------------------------------------------
+          // 3. エラーがあれば終了コード 1 で失敗にする
+          // ------------------------------------------------
+          if (hasError) {
+            console.error("\n❌ チェックに失敗しました。上記のエラーを修正してください。");
+            process.exit(1);
+          }
+
+          console.log("\n✅ すべてのチェックが通りました。");
+          EOF

@@ -1,114 +1,158 @@
-/* game-calendar-site / assets/js/main.js — SIGNAL redesign
+/* game-calendar-site / assets/js/main.js
    ---------------------------------------------------------- */
 
-const NAV_ITEMS = [];  // Single-page site — no nav links needed
+/* ─── プラットフォーム定義（表示用・色定義） ─────────────── */
+const PLATFORMS = {
+  SW2:   { label: 'Switch 2',  color: '#e60012' },
+  SW1:   { label: 'Switch',    color: '#e60012' },
+  PS5:   { label: 'PS5',       color: '#0070d1' },
+  PS4:   { label: 'PS4',       color: '#0050a0' },
+  XBX:   { label: 'Xbox',      color: '#107c10' },
+  PC:    { label: 'PC',        color: '#7c3aed' },
+  MULTI: { label: 'マルチ',    color: '#c9860a' },
+};
 
-/* ─── ① ナビ（互換性のため残す）─────────────────────────── */
-function buildNav() {
-  const nav = document.getElementById('site-nav');
-  if (!nav) return;
-  const ul = nav.querySelector('ul');
-  if (ul) ul.innerHTML = '';
-}
+/* ─── アプリ状態 ─────────────────────────────────────────── */
+// games は games.js で定義済み
 
-/* ─── ② モバイルナビ（互換性のため残す）────────────────── */
-function initMobileNav() { /* single-page, no hamburger needed */ }
-
-/* ─── ③ アプリ状態 ─────────────────────────────────────── */
-let currentYear  = 2026;
-let currentMonth = 5;    // 0-indexed: 5 = 6月
+const _now = new Date();
+_now.setHours(0, 0, 0, 0);
+let currentYear  = _now.getFullYear();
+let currentMonth = _now.getMonth();
 let currentView  = 'calendar';
-
-const MONTH_NAMES_EN = [
-  'JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE',
-  'JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'
-];
-const MONTH_ABBR_EN = [
-  'JAN','FEB','MAR','APR','MAY','JUN',
-  'JUL','AUG','SEP','OCT','NOV','DEC'
-];
 
 const pad = n => String(n).padStart(2, '0');
 
-/* ─── ④ ステータスバー ─────────────────────────────────── */
+// 今日の日付 Date オブジェクト（毎回生成して確実に今日を返す）
+function today() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+// 発売済み判定（date が null または今日以前）
+function isReleased(dateStr) {
+  return !dateStr || new Date(dateStr) <= today();
+}
+
+/* ─── ステータスバー ────────────────────────────────────── */
 function buildStatusBar() {
   const countEl = document.getElementById('status-count');
   const nextEl  = document.getElementById('status-next');
+  const t = today();
 
   if (countEl) {
-    countEl.textContent = `${GAME_DATA.length} タイトル`;
+    countEl.textContent = `${games.length} タイトル`;
   }
 
   if (nextEl) {
-    const today    = new Date();
-    today.setHours(0, 0, 0, 0);
-    const upcoming = GAME_DATA
-      .filter(g => g.date && new Date(g.date) >= today)
+    const upcoming = games
+      .filter(g => g.date && new Date(g.date) >= t)
       .sort((a, b) => a.date.localeCompare(b.date));
 
     if (upcoming.length > 0) {
       const next = upcoming[0];
-      const diff = Math.ceil((new Date(next.date) - today) / 86400000);
-      if (diff === 0) {
-        nextEl.textContent = `次回：${next.title}（本日）`;
-      } else {
-        nextEl.textContent = `次回：${next.title}（あと${diff}日）`;
-      }
+      const diff = Math.ceil((new Date(next.date) - t) / 86400000);
+      nextEl.textContent = diff === 0
+        ? `次回：${next.title}（本日）`
+        : `次回：${next.title}（あと${diff}日）`;
     } else {
       nextEl.textContent = '発売予定なし';
     }
   }
 }
 
-/* ─── ⑤ ティッカー ─────────────────────────────────────── */
+/* ─── 次回発売スポットライト ─────────────────────────────── */
+function buildNextUp() {
+  const card = document.getElementById('next-up-card');
+  if (!card) return;
+
+  const t = today();
+  const upcoming = games
+    .filter(g => g.date && new Date(g.date) >= t)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  if (upcoming.length === 0) {
+    card.hidden = true;
+    return;
+  }
+
+  const next = upcoming[0];
+  const diff = Math.ceil((new Date(next.date) - t) / 86400000);
+  const [y, m, d] = next.date.split('-');
+  const countdownText = diff === 0 ? '🎉 本日発売！' : `あと ${diff} 日`;
+
+  card.hidden = false;
+
+  const eyebrowEl   = card.querySelector('.next-up-eyebrow');
+  const titleEl     = card.querySelector('.next-up-title');
+  const dateEl      = card.querySelector('.next-up-date');
+  const countdownEl = card.querySelector('.next-up-countdown');
+
+  if (eyebrowEl) eyebrowEl.textContent = '次に発売';
+
+  if (titleEl) {
+    titleEl.innerHTML = '';
+    if (next.link) {
+      const a = document.createElement('a');
+      a.href = next.link;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.className = 'next-up-title-link';
+      a.textContent = next.title;
+      titleEl.appendChild(a);
+    } else {
+      titleEl.textContent = next.title;
+    }
+  }
+
+  if (dateEl)      dateEl.textContent      = `${y}年${parseInt(m)}月${parseInt(d)}日`;
+  if (countdownEl) countdownEl.textContent = countdownText;
+}
+
+/* ─── ティッカー ────────────────────────────────────────── */
 function buildTicker() {
   const track = document.getElementById('ticker-track');
   if (!track) return;
 
-  const confirmed = GAME_DATA
+  const confirmed = games
     .filter(g => g.date)
     .sort((a, b) => a.date.localeCompare(b.date));
 
   if (confirmed.length === 0) return;
 
-  // テキストを2回繰り返してシームレスループ
   const fragment = document.createDocumentFragment();
-
   [0, 1].forEach(() => {
     confirmed.forEach(game => {
       const item = document.createElement('span');
       item.className = 'ticker-item';
 
-      const parts = game.date.split('-');
+      const parts  = game.date.split('-');
       const pLabel = PLATFORMS[game.platforms[0]]?.label || game.platforms[0];
 
-      const title = document.createElement('span');
-      title.className = 'ticker-item-title';
-      title.textContent = game.title;
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'ticker-item-title';
+      titleSpan.textContent = game.title;
 
-      const date = document.createElement('span');
-      date.className = 'ticker-item-date';
-      date.textContent = `${parts[0]}.${parts[1]}.${parts[2]}`;
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'ticker-item-date';
+      dateSpan.textContent = `${parts[0]}.${parts[1]}.${parts[2]}`;
 
-      const plat = document.createElement('span');
-      plat.className = 'ticker-item-plat';
-      plat.textContent = pLabel;
+      const platSpan = document.createElement('span');
+      platSpan.className = 'ticker-item-plat';
+      platSpan.textContent = pLabel;
 
-      item.appendChild(title);
-      item.appendChild(date);
-      item.appendChild(plat);
+      item.append(titleSpan, dateSpan, platSpan);
       fragment.appendChild(item);
     });
   });
 
   track.appendChild(fragment);
-
-  // ループの長さに応じてアニメーション速度を調整
   const duration = Math.max(40, confirmed.length * 8);
   track.style.animationDuration = `${duration}s`;
 }
 
-/* ─── ⑥ カレンダー描画 ─────────────────────────────────── */
+/* ─── カレンダー描画 ────────────────────────────────────── */
 function buildCalendar(year, month) {
   const grid    = document.getElementById('cal-grid');
   const titleEl = document.getElementById('cal-month-title');
@@ -119,8 +163,7 @@ function buildCalendar(year, month) {
 
   const firstDow    = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const today       = new Date();
-  today.setHours(0, 0, 0, 0);
+  const t           = today();
   let cellIdx = 0;
 
   // 前月パディング
@@ -142,46 +185,41 @@ function buildCalendar(year, month) {
     if (dow === 5) cell.classList.add('cal-cell--sat');
     if (dow === 6) cell.classList.add('cal-cell--sun');
 
-    const cellDate = new Date(year, month, d);
-    if (cellDate.getTime() === today.getTime()) {
+    if (new Date(year, month, d).getTime() === t.getTime()) {
       cell.classList.add('cal-cell--today');
     }
 
-    // 日付ラベル
     const dateEl = document.createElement('div');
     dateEl.className = 'cal-cell-date';
     dateEl.textContent = d;
     cell.appendChild(dateEl);
 
-    // ゲームバッジ
     const key   = `${year}-${pad(month + 1)}-${pad(d)}`;
-    const games = GAME_DATA.filter(g => g.date === key);
+    const dayGames = games.filter(g => g.date === key);
 
     cell.setAttribute('tabindex', '0');
     cell.setAttribute('role', 'button');
     cell.setAttribute('aria-label', `${month + 1}月${d}日`);
 
-    if (games.length > 0) {
+    if (dayGames.length > 0) {
       cell.classList.add('cal-cell--has-games');
-      cell.setAttribute('aria-label', `${month + 1}月${d}日 — ${games.length}タイトル`);
+      cell.setAttribute('aria-label', `${month + 1}月${d}日 — ${dayGames.length}タイトル`);
 
       const maxShow = 3;
-      games.slice(0, maxShow).forEach(game => {
-        cell.appendChild(makeBadge(game));
-      });
-      if (games.length > maxShow) {
+      dayGames.slice(0, maxShow).forEach(game => cell.appendChild(makeBadge(game)));
+      if (dayGames.length > maxShow) {
         const more = document.createElement('span');
         more.className = 'badge-more';
-        more.textContent = `+${games.length - maxShow} more`;
+        more.textContent = `+${dayGames.length - maxShow} more`;
         cell.appendChild(more);
       }
     }
 
-    cell.addEventListener('click', () => showListView(year, month, d));
+    cell.addEventListener('click', () => showListView('day', key));
     cell.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        showListView(year, month, d);
+        showListView('day', key);
       }
     });
 
@@ -204,12 +242,11 @@ function buildCalendar(year, month) {
 }
 
 function makeBadge(game) {
-  const badge  = document.createElement('span');
+  const badge = document.createElement('span');
   badge.className = 'game-badge';
   badge.textContent = game.title;
 
-  const pKey  = game.platforms[0];
-  const pInfo = PLATFORMS[pKey];
+  const pInfo = PLATFORMS[game.platforms[0]];
   if (pInfo) {
     badge.style.borderLeftColor = pInfo.color;
     badge.style.background      = `${pInfo.color}0e`;
@@ -218,14 +255,14 @@ function makeBadge(game) {
   return badge;
 }
 
-/* ─── ⑦ 凡例 ──────────────────────────────────────────── */
+/* ─── 凡例 ──────────────────────────────────────────────── */
 function buildLegend() {
   const legend = document.getElementById('cal-legend');
   if (!legend) return;
   legend.innerHTML = '';
 
   const used = new Set();
-  GAME_DATA.forEach(g => {
+  games.forEach(g => {
     if (!g.date) return;
     const [y, m] = g.date.split('-').map(Number);
     if (y === currentYear && m - 1 === currentMonth) {
@@ -238,41 +275,37 @@ function buildLegend() {
     if (!p) return;
     const item = document.createElement('span');
     item.className = 'legend-item';
-
     const dot = document.createElement('span');
     dot.className = 'legend-dot';
     dot.style.background = p.color;
-
     item.appendChild(dot);
     item.appendChild(document.createTextNode(p.label));
     legend.appendChild(item);
   });
 }
 
-/* ─── ⑧ リスト描画 ─────────────────────────────────────── */
-function buildList(year, month, day) {
+/* ─── リスト描画 ────────────────────────────────────────── */
+// mode = 'day'  : 特定日クリック（その日 + 今後発売）
+// mode = 'all'  : 一覧ボタン（発売予定 / 日程未定 / 発売済み）
+function buildList(mode, dateStr) {
   const list    = document.getElementById('game-list');
   const titleEl = document.getElementById('list-month-title');
   if (!list || !titleEl) return;
 
-  let games;
   list.innerHTML = '';
+  const t = today();
 
-  if (day !== null) {
-    // ── 日付クリック時: 当日発売 + 今後発売予定 ──────────────
-    titleEl.textContent = `${year}年${month + 1}月${day}日`;
-    const key = `${year}-${pad(month + 1)}-${pad(day)}`;
+  if (mode === 'day') {
+    // ── 日付クリック ──────────────────────────────────────
+    const [y, m, d] = dateStr.split('-');
+    titleEl.textContent = `${y}年${parseInt(m)}月${parseInt(d)}日`;
 
-    const todayGames = GAME_DATA.filter(g => g.date === key);
-    const futureGames = GAME_DATA
-      .filter(g => g.date && g.date > key)
+    const todayGames  = games.filter(g => g.date === dateStr);
+    const futureGames = games
+      .filter(g => g.date && g.date > dateStr)
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    // 当日発売セクション
-    const sep1 = document.createElement('div');
-    sep1.className = 'list-separator list-separator--today';
-    sep1.textContent = '当日発売';
-    list.appendChild(sep1);
+    appendSep(list, '当日発売', 'list-separator--today');
 
     if (todayGames.length === 0) {
       const empty = document.createElement('p');
@@ -280,90 +313,95 @@ function buildList(year, month, day) {
       empty.textContent = 'この日の発売タイトルはありません。';
       list.appendChild(empty);
     } else {
-      todayGames.forEach((game, i) => {
-        const card = makeGameCard(game);
+      todayGames.forEach((g, i) => {
+        const card = makeGameCard(g);
         card.style.animationDelay = `${i * 0.04}s`;
         list.appendChild(card);
       });
     }
 
-    // 今後発売予定セクション
     if (futureGames.length > 0) {
-      const sep2 = document.createElement('div');
-      sep2.className = 'list-separator';
-      sep2.textContent = '今後発売予定';
-      list.appendChild(sep2);
-
-      futureGames.forEach((game, i) => {
-        const card = makeGameCard(game);
+      appendSep(list, '今後発売予定');
+      futureGames.forEach((g, i) => {
+        const card = makeGameCard(g);
         card.style.animationDelay = `${(todayGames.length + i) * 0.04}s`;
         list.appendChild(card);
       });
     }
 
   } else {
-    // ── 月全体表示 ─────────────────────────────────────────
-    titleEl.textContent = `${year}年${month + 1}月`;
-    const prefix = `${year}-${pad(month + 1)}`;
-    const games = GAME_DATA
-      .filter(g => g.date && g.date.startsWith(prefix))
+    // ── 全タイトル表示（一覧ボタン） ─────────────────────
+    titleEl.textContent = '全タイトル';
+
+    const upcoming = games
+      .filter(g => g.date && new Date(g.date) >= t)
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    if (games.length === 0) {
-      const empty = document.createElement('p');
-      empty.className = 'list-empty';
-      empty.textContent = 'この月に確定した発売日はありません。';
-      list.appendChild(empty);
-    } else {
-      games.forEach((game, i) => {
-        const card = makeGameCard(game);
+    const tbd  = games.filter(g => !g.date);
+
+    const past = games
+      .filter(g => g.date && new Date(g.date) < t)
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    if (upcoming.length > 0) {
+      appendSep(list, '発売予定');
+      upcoming.forEach((g, i) => {
+        const card = makeGameCard(g);
         card.style.animationDelay = `${i * 0.04}s`;
         list.appendChild(card);
       });
     }
 
-    // 日程未定セクション
-    const tbd = GAME_DATA.filter(g => {
-      if (g.date) return false;
-      return g.note && g.note.includes(String(year));
-    });
-
     if (tbd.length > 0) {
-      const sep = document.createElement('div');
-      sep.className = 'list-separator';
-      sep.textContent = '日程未定';
-      list.appendChild(sep);
-
-      tbd.forEach((game, i) => {
-        const card = makeGameCard(game);
-        card.style.animationDelay = `${(games.length + i) * 0.04}s`;
+      appendSep(list, '日程未定');
+      tbd.forEach((g, i) => {
+        const card = makeGameCard(g);
+        card.style.animationDelay = `${(upcoming.length + i) * 0.04}s`;
         list.appendChild(card);
       });
+    }
+
+    if (past.length > 0) {
+      appendSep(list, '発売済み');
+      past.forEach((g, i) => {
+        const card = makeGameCard(g);
+        card.style.animationDelay = `${(upcoming.length + tbd.length + i) * 0.04}s`;
+        list.appendChild(card);
+      });
+    }
+
+    if (upcoming.length === 0 && tbd.length === 0 && past.length === 0) {
+      const empty = document.createElement('p');
+      empty.className = 'list-empty';
+      empty.textContent = 'データがありません。';
+      list.appendChild(empty);
     }
   }
 }
 
+function appendSep(list, text, extraClass) {
+  const sep = document.createElement('div');
+  sep.className = extraClass ? `list-separator ${extraClass}` : 'list-separator';
+  sep.textContent = text;
+  list.appendChild(sep);
+}
+
+/* ─── ゲームカード ──────────────────────────────────────── */
 function makeGameCard(game) {
   const card = document.createElement('div');
   card.className = 'game-card';
   card.setAttribute('role', 'listitem');
   if (game.highlight) card.classList.add('game-card--highlight');
 
-  // 左ボーダーにプラットフォーム代表色
   const pInfo = PLATFORMS[game.platforms[0]];
-  if (pInfo && game.highlight) {
-    card.style.borderLeftColor = pInfo.color;
-  }
+  if (pInfo && game.highlight) card.style.borderLeftColor = pInfo.color;
 
-  // 日付列
+  // ── 日付列 ──────────────────────────────────────────────
   const dateCol = document.createElement('div');
   dateCol.className = 'game-card-date';
 
   if (game.date) {
-    const parts = game.date.split('-');
-    const m     = parseInt(parts[1]) - 1;
-    const d     = parseInt(parts[2]);
-    const y     = parseInt(parts[0]);
+    const [y, m, d] = game.date.split('-').map(Number);
 
     const dayEl = document.createElement('div');
     dayEl.className = 'date-day';
@@ -371,15 +409,13 @@ function makeGameCard(game) {
 
     const monEl = document.createElement('div');
     monEl.className = 'date-month';
-    monEl.textContent = `${m + 1}月`;
+    monEl.textContent = `${m}月`;
 
     const yrEl = document.createElement('div');
     yrEl.className = 'date-year';
     yrEl.textContent = y;
 
-    dateCol.appendChild(dayEl);
-    dateCol.appendChild(monEl);
-    dateCol.appendChild(yrEl);
+    dateCol.append(dayEl, monEl, yrEl);
   } else {
     dateCol.classList.add('game-card-date--tbd');
     const tbdEl = document.createElement('div');
@@ -388,14 +424,27 @@ function makeGameCard(game) {
     dateCol.appendChild(tbdEl);
   }
 
-  // 情報列
+  // ── 情報列 ──────────────────────────────────────────────
   const info = document.createElement('div');
   info.className = 'game-card-info';
 
-  const title = document.createElement('div');
-  title.className = 'game-card-title';
-  title.textContent = game.title;
+  // タイトル（link がある場合はリンク化）
+  const titleDiv = document.createElement('div');
+  titleDiv.className = 'game-card-title';
 
+  if (game.link) {
+    const a = document.createElement('a');
+    a.href = game.link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.className = 'game-card-title-link';
+    a.textContent = game.title;
+    titleDiv.appendChild(a);
+  } else {
+    titleDiv.textContent = game.title;
+  }
+
+  // プラットフォームバッジ + ジャンル
   const meta = document.createElement('div');
   meta.className = 'game-card-meta';
 
@@ -405,9 +454,9 @@ function makeGameCard(game) {
     const badge = document.createElement('span');
     badge.className = 'platform-badge';
     badge.textContent = p.label;
-    badge.style.color        = p.color;
-    badge.style.borderColor  = `${p.color}44`;
-    badge.style.background   = `${p.color}10`;
+    badge.style.color       = p.color;
+    badge.style.borderColor = `${p.color}44`;
+    badge.style.background  = `${p.color}10`;
     meta.appendChild(badge);
   });
 
@@ -418,9 +467,9 @@ function makeGameCard(game) {
     meta.appendChild(genre);
   }
 
-  info.appendChild(title);
-  info.appendChild(meta);
+  info.append(titleDiv, meta);
 
+  // ノート
   if (game.note) {
     const note = document.createElement('div');
     note.className = 'game-card-note';
@@ -428,44 +477,71 @@ function makeGameCard(game) {
     info.appendChild(note);
   }
 
-  card.appendChild(dateCol);
-  card.appendChild(info);
+  // Amazon ボタン（常に表示）
+  const btnWrap = document.createElement('div');
+  btnWrap.className = 'amazon-btn-wrap';
+
+  let amazonUrl = game.link;
+  const isSearchLink = !amazonUrl;
+  if (isSearchLink) {
+    const pLabel = game.platforms.map(k => PLATFORMS[k]?.label || k).join(' ');
+    const query = encodeURIComponent(`${game.title} ${pLabel}`);
+    amazonUrl = `https://www.amazon.co.jp/s?k=${query}`;
+  }
+
+  const btn = document.createElement('a');
+  btn.className = 'amazon-btn';
+  btn.href = amazonUrl;
+  btn.target = '_blank';
+  btn.rel = 'noopener noreferrer';
+  btn.textContent = isReleased(game.date) ? '購入する' : '予約する';
+  btnWrap.appendChild(btn);
+
+  if (isSearchLink) {
+    const badge = document.createElement('span');
+    badge.className = 'amazon-search-badge';
+    badge.textContent = 'Amazon検索へ';
+    badge.dataset.tip = 'このボタンはAmazonの商品ページではなく検索結果ページを開きます';
+    btnWrap.appendChild(badge);
+  }
+
+  info.appendChild(btnWrap);
+
+  card.append(dateCol, info);
   return card;
 }
 
-/* ─── ⑨ ビュー切り替え ─────────────────────────────────── */
+/* ─── ビュー切り替え ────────────────────────────────────── */
 function showCalendarView() {
   document.getElementById('calendar-view').classList.remove('view-panel--hidden');
   document.getElementById('list-view').classList.add('view-panel--hidden');
   currentView = 'calendar';
 }
 
-function showListView(year, month, day) {
-  buildList(year, month, day);
+function showListView(mode, dateStr) {
+  buildList(mode, dateStr);
   document.getElementById('calendar-view').classList.add('view-panel--hidden');
   document.getElementById('list-view').classList.remove('view-panel--hidden');
   currentView = 'list';
   document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-/* ─── ⑩ コントロール ────────────────────────────────────── */
+/* ─── コントロール ──────────────────────────────────────── */
 function initControls() {
   document.getElementById('btn-prev').addEventListener('click', () => {
     currentMonth--;
     if (currentMonth < 0) { currentMonth = 11; currentYear--; }
     buildCalendar(currentYear, currentMonth);
-    if (currentView === 'list') buildList(currentYear, currentMonth, null);
   });
 
   document.getElementById('btn-next').addEventListener('click', () => {
     currentMonth++;
     if (currentMonth > 11) { currentMonth = 0; currentYear++; }
     buildCalendar(currentYear, currentMonth);
-    if (currentView === 'list') buildList(currentYear, currentMonth, null);
   });
 
   document.getElementById('btn-list-view').addEventListener('click', () => {
-    showListView(currentYear, currentMonth, null);
+    showListView('all', null);
   });
 
   document.getElementById('btn-calendar-view').addEventListener('click', () => {
@@ -473,8 +549,9 @@ function initControls() {
   });
 }
 
-/* ─── 初期化 ───────────────────────────────────────────── */
+/* ─── 初期化 ────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  buildNextUp();
   buildTicker();
   buildStatusBar();
   buildCalendar(currentYear, currentMonth);

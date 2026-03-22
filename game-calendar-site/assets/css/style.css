@@ -342,6 +342,8 @@ ul, ol { list-style: none; }
   transition: background var(--transition), box-shadow var(--transition);
   position: relative;
   animation: cellReveal 0.35s ease backwards;
+  overflow: hidden;
+  min-width: 0;
 }
 .cal-cell:nth-child(7n) { border-right: none; }
 
@@ -686,7 +688,184 @@ ul, ol { list-style: none; }
   line-height: 1.6;
 }
 
-/* ── 13. Footer ───────────────────────────────────────────── */
+/* ── 13. Game Card: Title Link & Long Title Fix ───────────── */
+.game-card-title {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.game-card-title-link {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.game-card-title-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* ── 14. Amazon Button ────────────────────────────────────── */
+.amazon-btn-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.amazon-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 1.1rem;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px rgba(224, 122, 95, 0.3);
+  white-space: nowrap;
+}
+.amazon-btn:hover {
+  background: #c96a50;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(224, 122, 95, 0.45);
+}
+
+/* 検索リンク注記バッジ */
+.amazon-search-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  color: var(--color-text-dim);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  padding: 0.18rem 0.6rem;
+  border-radius: 20px;
+  cursor: default;
+  white-space: nowrap;
+  transition: color var(--transition), border-color var(--transition);
+}
+.amazon-search-badge:hover {
+  color: var(--color-text-muted);
+  border-color: var(--color-text-dim);
+}
+
+/* ツールチップ */
+.amazon-search-badge::before,
+.amazon-search-badge::after {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+  z-index: 50;
+}
+.amazon-search-badge::after {
+  content: attr(data-tip);
+  background: var(--color-text);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  white-space: normal;
+  width: 220px;
+  text-align: center;
+}
+.amazon-search-badge::before {
+  content: '';
+  bottom: calc(100% + 1px);
+  border: 5px solid transparent;
+  border-top-color: var(--color-text);
+  width: 0;
+  height: 0;
+  padding: 0;
+}
+.amazon-search-badge:hover::before,
+.amazon-search-badge:hover::after {
+  opacity: 1;
+}
+
+/* ── 15. Next Up Spotlight ────────────────────────────────── */
+.next-up-card {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(224, 122, 95, 0.05) 100%);
+  border: 1.5px solid rgba(224, 122, 95, 0.28);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.4rem 1.1rem 1.6rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.next-up-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.next-up-eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  margin-bottom: 0.35rem;
+}
+
+.next-up-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  font-weight: 400;
+  color: var(--color-text);
+  line-height: 1.45;
+  margin-bottom: 0.55rem;
+  word-break: break-word;
+}
+
+.next-up-title-link {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.next-up-title-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.next-up-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.next-up-date {
+  font-size: 0.83rem;
+  color: var(--color-text-muted);
+}
+
+.next-up-countdown {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  padding: 0.18rem 0.7rem;
+  border-radius: 20px;
+}
+
+/* ── 16. Footer ───────────────────────────────────────────── */
 .site-footer {
   position: relative;
   z-index: 1;
