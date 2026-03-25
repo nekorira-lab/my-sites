@@ -64,6 +64,9 @@ jobs:
           // 必須フィールド（値が null でもフィールド自体は必要）
           const REQUIRED_FIELDS = ["id", "title", "date", "platforms", "genre", "highlight"];
 
+          // 推奨フィールド（なくてもエラーにはしない。警告のみ）
+          const RECOMMENDED_FIELDS = ["sourceUrl", "sourceName", "lastVerifiedAt"];
+
           let hasError = false;
 
           for (const file of files) {
@@ -154,6 +157,25 @@ jobs:
               if ("highlight" in item && typeof item.highlight !== "boolean") {
                 console.error(`  ❌ [${label}] highlight は true または false である必要があります`);
                 hasError = true;
+              }
+
+              // lastVerifiedAt は "YYYY-MM-DD" 形式または null
+              if ("lastVerifiedAt" in item && item.lastVerifiedAt !== null) {
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(item.lastVerifiedAt)) {
+                  console.error(
+                    `  ❌ [${label}] lastVerifiedAt の形式が不正です: "${item.lastVerifiedAt}" (例: "2026-03-25" または null)`
+                  );
+                  hasError = true;
+                }
+              }
+
+              // 推奨フィールドの不足を警告（2026年以降の発売確定タイトルのみ）
+              if (item.date && item.date >= "2026-01-01") {
+                for (const field of RECOMMENDED_FIELDS) {
+                  if (!(field in item)) {
+                    console.warn(`  ⚠️  [${label}] 推奨フィールド "${field}" がありません（エラーではありません）`);
+                  }
+                }
               }
             }
 

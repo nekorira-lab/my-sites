@@ -507,6 +507,21 @@ function makeGameCard(game) {
 
   info.appendChild(btnWrap);
 
+  // 最終確認日・参照元（未来の確定タイトルのみリスト表示）
+  if (game.lastVerifiedAt && game.date && new Date(game.date) >= today()) {
+    const [y, m, d] = game.lastVerifiedAt.split('-').map(Number);
+    const verified = document.createElement('div');
+    verified.className = 'game-card-verified';
+    if (game.sourceUrl) {
+      verified.innerHTML = `確認: ${y}年${m}月${d}日 ／ <a href="${game.sourceUrl}" target="_blank" rel="noopener noreferrer">${game.sourceName || '出典'}</a>`;
+    } else if (game.sourceName) {
+      verified.textContent = `確認: ${y}年${m}月${d}日 ／ ${game.sourceName}`;
+    } else {
+      verified.textContent = `確認: ${y}年${m}月${d}日`;
+    }
+    info.appendChild(verified);
+  }
+
   card.append(dateCol, info);
   return card;
 }
@@ -549,6 +564,21 @@ function initControls() {
   });
 }
 
+/* ─── フッター更新日 ─────────────────────────────────────── */
+function buildFooterDate() {
+  const el = document.getElementById('footer-updated');
+  if (!el) return;
+  // games.js の lastVerifiedAt 最新値をデータ更新日として表示
+  const dates = games
+    .map(g => g.lastVerifiedAt)
+    .filter(Boolean)
+    .sort();
+  if (dates.length === 0) return;
+  const latest = dates[dates.length - 1];
+  const [y, m, d] = latest.split('-').map(Number);
+  el.textContent = `${y}年${m}月${d}日`;
+}
+
 /* ─── 初期化 ────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   buildNextUp();
@@ -556,4 +586,5 @@ document.addEventListener('DOMContentLoaded', () => {
   buildStatusBar();
   buildCalendar(currentYear, currentMonth);
   initControls();
+  buildFooterDate();
 });
