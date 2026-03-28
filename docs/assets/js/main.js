@@ -502,8 +502,7 @@ function makeGameCard(game) {
   subGroup.className = 'game-card-btns-sub';
 
   // 「Amazon検索へ」— 常に有効（タイトル＋機種で自動検索）
-  const pLabel = game.platforms.map(k => PLATFORMS[k]?.label || k).join(' ');
-  const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(`${game.title} ${pLabel}`)}`;
+  const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(game.title)}`;
   const searchBtn = document.createElement('a');
   searchBtn.className = 'card-btn card-btn--sub';
   searchBtn.href      = searchUrl;
