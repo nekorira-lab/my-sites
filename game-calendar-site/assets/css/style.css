@@ -980,4 +980,14 @@ ul, ol { list-style: none; }
   .btn-switch-list { font-size: 0.75rem; padding: 0.4rem 0.75rem; }
 
   .ticker-label { font-size: 0.65rem; padding: 0 0.6rem; }
+
+  /* notice-bar: モバイルでサイドパディングを詰める */
+  .notice-bar { padding: 0.5rem 1rem; font-size: 0.78rem; }
+
+  /* game-card-verified: 12px相当に拡大してWCAA基準を満たす */
+  .game-card-verified { font-size: 0.75rem; }
+  .game-card-verified a {
+    display: inline-block;
+    padding: 0.2rem 0;   /* タップ領域を縦に確保 */
+  }
 }
