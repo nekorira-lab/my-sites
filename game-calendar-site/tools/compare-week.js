@@ -70,8 +70,8 @@ const REFERENCE_GAMES = [
 const fs   = require('fs');
 const path = require('path');
 
-// games.js を読み込む
-const gamesPath = path.join(__dirname, '../assets/js/games.js');
+// games.js を読み込む（docs/ フォルダに移動済み）
+const gamesPath = path.join(__dirname, '../../docs/assets/js/games.js');
 const src       = fs.readFileSync(gamesPath, 'utf-8');
 const fn        = new Function(src + '\nreturn games;');
 const games     = fn();

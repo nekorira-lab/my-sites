@@ -2,17 +2,35 @@
 
 ## ファイル構成
 
+公開ファイルは **リポジトリルートの `docs/`** に置いています。GitHub Pages はこのフォルダを配信します。
+
 ```
-game-calendar-site/
-├── index.html              # 公開ページ（HTML のみ変更不要）
-├── assets/
-│   ├── css/style.css       # スタイル
-│   └── js/
-│       ├── games.js        # ★ データファイル（ここだけ編集）
-│       └── main.js         # 表示ロジック（基本変更不要）
-└── tools/
-    └── compare-week.js     # 週次比較スクリプト（Node.js 必要）
+my-sites/                        ← リポジトリルート
+├── docs/                        ← GitHub Pages の配信元（ここを編集）
+│   ├── index.html               # 公開ページ（基本変更不要）
+│   └── assets/
+│       ├── css/style.css        # スタイル
+│       └── js/
+│           ├── games.js         # ★ データファイル（ここだけ編集）
+│           └── main.js          # 表示ロジック（基本変更不要）
+└── game-calendar-site/          ← 運用ツール・ドキュメント
+    ├── README.md                # このファイル
+    └── tools/
+        └── compare-week.js     # 週次比較スクリプト（Node.js 必要）
 ```
+
+---
+
+## GitHub Pages の設定方法
+
+1. GitHub でリポジトリを開く
+2. **Settings** タブ → 左メニュー **Pages**
+3. **Source** を以下に設定:
+   - Branch: `main`
+   - Folder: `/docs`
+4. **Save** を押す
+
+公開URL: `https://nekorira-lab.github.io/my-sites/`
 
 ---
 
@@ -184,7 +202,7 @@ const REFERENCE_GAMES = [
 ### `node tools/compare-week.js` がエラーになる
 
 ```
-Error: Cannot find module '../assets/js/games.js'
+Error: Cannot find module '../../docs/assets/js/games.js'
 ```
 → `game-calendar-site` ディレクトリで実行しているか確認:
 ```sh
