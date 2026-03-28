@@ -674,15 +674,6 @@ ul, ol { list-style: none; }
   padding: 0.15rem 0.55rem;
   border: 1.5px solid;
   border-radius: 20px;
-  text-decoration: none;
-}
-.platform-badge--linked {
-  cursor: pointer;
-  transition: filter var(--transition), box-shadow var(--transition);
-}
-.platform-badge--linked:hover {
-  filter: brightness(1.2);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.18);
 }
 
 .genre-tag {
@@ -782,6 +773,36 @@ ul, ol { list-style: none; }
 .card-btn--disabled {
   opacity: 0.35;
   cursor: not-allowed;
+}
+
+/* 購入先行（複数プラットフォーム） */
+.game-card-buy-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  width: 100%;
+}
+.game-card-buy-label {
+  font-size: 0.7rem;
+  color: var(--color-text-dim);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* プラットフォームごとの購入ボタン */
+.card-btn--platform {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.28rem 0.75rem;
+  min-height: 1.75rem;
+  min-width: auto;
+  border-radius: 20px;
+}
+.card-btn--platform:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* ── 15. Next Up Spotlight ────────────────────────────────── */

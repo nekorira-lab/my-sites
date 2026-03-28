@@ -15,7 +15,12 @@
       "WebFetch(domain:kakaku.com)",
       "WebFetch(domain:brightdays.jp)",
       "WebFetch(domain:dengekionline.com)",
-      "WebFetch(domain:geo-online.co.jp)"
+      "WebFetch(domain:geo-online.co.jp)",
+      "WebFetch(domain:game.neoscorp.jp)",
+      "WebFetch(domain:gamewith.jp)",
+      "WebFetch(domain:switchsoku.com)",
+      "WebFetch(domain:samudari.com)",
+      "WebFetch(domain:www.gameman.jp)"
     ],
     "additionalDirectories": [
       "E:\\AI\\claude\\.claude\\projects\\works\\my-sites\\docs\\assets\\js",

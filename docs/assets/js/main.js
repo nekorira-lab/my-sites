@@ -388,8 +388,50 @@ function appendSep(list, text, extraClass) {
 
 /* ─── ゲームカード: ボタン生成 ──────────────────────────── */
 function buildGameButtons(game) {
+  const released = isReleased(game.date);
   const wrap = document.createElement('div');
   wrap.className = 'game-card-btns';
+
+  // ── 購入 / 予約ボタン ────────────────────────────────────
+  const links = game.purchaseLinks || {};
+  const linkedPlatforms = game.platforms.filter(pKey => links[pKey]);
+
+  if (linkedPlatforms.length === 1) {
+    // 単一機種: 従来の「予約する」「購入する」
+    const btn = document.createElement('a');
+    btn.className   = 'card-btn card-btn--primary';
+    btn.href        = links[linkedPlatforms[0]];
+    btn.target      = '_blank';
+    btn.rel         = 'noopener noreferrer';
+    btn.textContent = released ? '購入する' : '予約する';
+    wrap.appendChild(btn);
+  } else if (linkedPlatforms.length > 1) {
+    // 複数機種: 「購入先:」行
+    const buyRow = document.createElement('div');
+    buyRow.className = 'game-card-buy-row';
+
+    const label = document.createElement('span');
+    label.className   = 'game-card-buy-label';
+    label.textContent = released ? '購入先:' : '予約先:';
+    buyRow.appendChild(label);
+
+    linkedPlatforms.forEach(pKey => {
+      const p = PLATFORMS[pKey];
+      if (!p) return;
+      const btn = document.createElement('a');
+      btn.className   = 'card-btn card-btn--platform';
+      btn.href        = links[pKey];
+      btn.target      = '_blank';
+      btn.rel         = 'noopener noreferrer';
+      btn.textContent = released ? `${p.label}版を購入` : `${p.label}版を予約`;
+      btn.style.color       = p.color;
+      btn.style.borderColor = `${p.color}66`;
+      btn.style.background  = `${p.color}12`;
+      buyRow.appendChild(btn);
+    });
+
+    wrap.appendChild(buyRow);
+  }
 
   // ── Amazonで探す ─────────────────────────────────────────
   // amazonSearchUrl が明示されていればそれを使用、なければタイトルで自動生成
@@ -488,14 +530,8 @@ function makeGameCard(game) {
   game.platforms.forEach(pKey => {
     const p = PLATFORMS[pKey];
     if (!p) return;
-    const url = game.purchaseLinks?.[pKey];
-    const badge = document.createElement(url ? 'a' : 'span');
-    badge.className = url ? 'platform-badge platform-badge--linked' : 'platform-badge';
-    if (url) {
-      badge.href   = url;
-      badge.target = '_blank';
-      badge.rel    = 'noopener noreferrer';
-    }
+    const badge = document.createElement('span');
+    badge.className = 'platform-badge';
     badge.textContent = p.label;
     badge.style.color       = p.color;
     badge.style.borderColor = `${p.color}44`;
