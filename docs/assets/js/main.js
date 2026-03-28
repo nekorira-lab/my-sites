@@ -373,7 +373,7 @@ function buildList(mode, dateStr) {
     if (upcoming.length === 0 && tbd.length === 0 && past.length === 0) {
       const empty = document.createElement('p');
       empty.className = 'list-empty';
-      empty.textContent = 'データがありません。';
+      empty.textContent = '現在、登録されているタイトルはありません。';
       list.appendChild(empty);
     }
   }
@@ -477,34 +477,59 @@ function makeGameCard(game) {
     info.appendChild(note);
   }
 
-  // Amazon ボタン（常に表示）
+  // ── ボタン群 ────────────────────────────────────────────
+  // 左:「予約する」  右:「Amazon検索へ」「公式サイト」
   const btnWrap = document.createElement('div');
-  btnWrap.className = 'amazon-btn-wrap';
+  btnWrap.className = 'game-card-btns';
 
-  let amazonUrl = game.link;
-  const isSearchLink = !amazonUrl;
-  if (isSearchLink) {
-    const pLabel = game.platforms.map(k => PLATFORMS[k]?.label || k).join(' ');
-    const query = encodeURIComponent(`${game.title} ${pLabel}`);
-    amazonUrl = `https://www.amazon.co.jp/s?k=${query}`;
+  // 「予約する」— game.amazonUrl がある場合のみ有効（現データは常に無効）
+  const hasReserve = Boolean(game.amazonUrl);
+  const reserveBtn = document.createElement(hasReserve ? 'a' : 'span');
+  reserveBtn.className = 'card-btn card-btn--primary';
+  reserveBtn.textContent = '予約する';
+  if (hasReserve) {
+    reserveBtn.href   = game.amazonUrl;
+    reserveBtn.target = '_blank';
+    reserveBtn.rel    = 'noopener noreferrer';
+  } else {
+    reserveBtn.classList.add('card-btn--disabled');
+    reserveBtn.setAttribute('aria-disabled', 'true');
+    reserveBtn.title  = '現在、Amazon予約ページが見つかっていません';
   }
 
-  const btn = document.createElement('a');
-  btn.className = 'amazon-btn';
-  btn.href = amazonUrl;
-  btn.target = '_blank';
-  btn.rel = 'noopener noreferrer';
-  btn.textContent = isReleased(game.date) ? '購入する' : '予約する';
-  btnWrap.appendChild(btn);
+  // サブボタン群（右）
+  const subGroup = document.createElement('div');
+  subGroup.className = 'game-card-btns-sub';
 
-  if (isSearchLink) {
-    const badge = document.createElement('span');
-    badge.className = 'amazon-search-badge';
-    badge.textContent = 'Amazon検索へ';
-    badge.dataset.tip = 'このボタンはAmazonの商品ページではなく検索結果ページを開きます';
-    btnWrap.appendChild(badge);
+  // 「Amazon検索へ」— 常に有効（タイトル＋機種で自動検索）
+  const pLabel = game.platforms.map(k => PLATFORMS[k]?.label || k).join(' ');
+  const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(`${game.title} ${pLabel}`)}`;
+  const searchBtn = document.createElement('a');
+  searchBtn.className = 'card-btn card-btn--sub';
+  searchBtn.href      = searchUrl;
+  searchBtn.target    = '_blank';
+  searchBtn.rel       = 'noopener noreferrer';
+  searchBtn.textContent = 'Amazon検索へ';
+  subGroup.appendChild(searchBtn);
+
+  // 「公式サイト」— game.link がある場合のみ有効
+  const hasOfficial = Boolean(game.link);
+  const officialBtn = document.createElement(hasOfficial ? 'a' : 'span');
+  officialBtn.className = 'card-btn card-btn--sub';
+  officialBtn.textContent = '公式サイト';
+  if (hasOfficial) {
+    officialBtn.href   = game.link;
+    officialBtn.target = '_blank';
+    officialBtn.rel    = 'noopener noreferrer';
+  } else {
+    officialBtn.classList.add('card-btn--disabled');
+    officialBtn.setAttribute('aria-disabled', 'true');
+    officialBtn.title  = '現在、公式サイトURLが未設定です';
   }
+  subGroup.appendChild(officialBtn);
 
+  btnWrap.appendChild(reserveBtn);
+  btnWrap.appendChild(subGroup);
   info.appendChild(btnWrap);
 
   // 最終確認日・参照元（未来の確定タイトルのみリスト表示）

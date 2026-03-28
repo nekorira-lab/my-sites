@@ -704,93 +704,78 @@ ul, ol { list-style: none; }
   text-decoration: underline;
 }
 
-/* ── 14. Amazon Button ────────────────────────────────────── */
-.amazon-btn-wrap {
+/* ── 14. Game Card: Buttons ───────────────────────────────── */
+
+/* ボタンエリア全体: 左に予約する、右にサブグループ */
+.game-card-btns {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: space-between;
+  gap: 0.5rem;
   margin-top: 0.65rem;
+  flex-wrap: wrap;
+  min-height: 2.1rem;
+}
+
+/* サブボタングループ（Amazon検索へ・公式サイト） */
+.game-card-btns-sub {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   flex-wrap: wrap;
 }
 
-.amazon-btn {
+/* 共通ボタン基盤 */
+.card-btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.35rem 1.1rem;
-  background: var(--color-accent);
-  color: #fff;
+  justify-content: center;
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
+  padding: 0.35rem 1rem;
   border-radius: var(--radius-sm);
   text-decoration: none;
-  transition: all var(--transition);
-  box-shadow: 0 2px 8px rgba(224, 122, 95, 0.3);
   white-space: nowrap;
+  transition: all var(--transition);
+  border: 1.5px solid transparent;
+  min-height: 2rem;
+  min-width: 5rem;
+  line-height: 1;
 }
-.amazon-btn:hover {
+
+/* プライマリボタン（予約する） */
+.card-btn--primary {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(224, 122, 95, 0.3);
+}
+.card-btn--primary:not(.card-btn--disabled):hover {
   background: #c96a50;
   color: #fff;
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(224, 122, 95, 0.45);
 }
 
-/* 検索リンク注記バッジ */
-.amazon-search-badge {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.68rem;
-  color: var(--color-text-dim);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  padding: 0.18rem 0.6rem;
-  border-radius: 20px;
-  cursor: default;
-  white-space: nowrap;
-  transition: color var(--transition), border-color var(--transition);
-}
-.amazon-search-badge:hover {
+/* サブボタン（Amazon検索へ・公式サイト） */
+.card-btn--sub {
+  background: var(--color-surface);
   color: var(--color-text-muted);
-  border-color: var(--color-text-dim);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+.card-btn--sub:not(.card-btn--disabled):hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
 }
 
-/* ツールチップ */
-.amazon-search-badge::before,
-.amazon-search-badge::after {
-  position: absolute;
-  bottom: calc(100% + 7px);
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s;
-  z-index: 50;
-}
-.amazon-search-badge::after {
-  content: attr(data-tip);
-  background: var(--color-text);
-  color: #fff;
-  font-size: 0.72rem;
-  line-height: 1.5;
-  padding: 0.4rem 0.75rem;
-  border-radius: var(--radius-sm);
-  white-space: normal;
-  width: 220px;
-  text-align: center;
-}
-.amazon-search-badge::before {
-  content: '';
-  bottom: calc(100% + 1px);
-  border: 5px solid transparent;
-  border-top-color: var(--color-text);
-  width: 0;
-  height: 0;
-  padding: 0;
-}
-.amazon-search-badge:hover::before,
-.amazon-search-badge:hover::after {
-  opacity: 1;
+/* 無効状態: 薄く、クリック不可 */
+.card-btn--disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 /* ── 15. Next Up Spotlight ────────────────────────────────── */
@@ -990,4 +975,14 @@ ul, ol { list-style: none; }
     display: inline-block;
     padding: 0.2rem 0;   /* タップ領域を縦に確保 */
   }
+
+  /* ボタン: スマホで押しやすいサイズ */
+  .game-card-btns { gap: 0.4rem; margin-top: 0.55rem; }
+  .card-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    min-height: 2.2rem;  /* 指で押しやすい高さ */
+    min-width: 4.5rem;
+  }
+  .game-card-btns-sub { gap: 0.35rem; }
 }
