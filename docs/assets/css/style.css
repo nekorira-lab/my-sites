@@ -674,6 +674,15 @@ ul, ol { list-style: none; }
   padding: 0.15rem 0.55rem;
   border: 1.5px solid;
   border-radius: 20px;
+  text-decoration: none;
+}
+.platform-badge--linked {
+  cursor: pointer;
+  transition: filter var(--transition), box-shadow var(--transition);
+}
+.platform-badge--linked:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.18);
 }
 
 .genre-tag {

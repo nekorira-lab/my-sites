@@ -388,21 +388,8 @@ function appendSep(list, text, extraClass) {
 
 /* ─── ゲームカード: ボタン生成 ──────────────────────────── */
 function buildGameButtons(game) {
-  const released = isReleased(game.date);
   const wrap = document.createElement('div');
   wrap.className = 'game-card-btns';
-
-  // ── プライマリ: 予約する / 購入する ─────────────────────
-  // amazonUrl がある場合のみ表示（ない場合はボタン自体を出さない）
-  if (game.amazonUrl) {
-    const btn = document.createElement('a');
-    btn.className = 'card-btn card-btn--primary';
-    btn.href      = game.amazonUrl;
-    btn.target    = '_blank';
-    btn.rel       = 'noopener noreferrer';
-    btn.textContent = released ? '購入する' : '予約する';
-    wrap.appendChild(btn);
-  }
 
   // ── Amazonで探す ─────────────────────────────────────────
   // amazonSearchUrl が明示されていればそれを使用、なければタイトルで自動生成
@@ -501,8 +488,14 @@ function makeGameCard(game) {
   game.platforms.forEach(pKey => {
     const p = PLATFORMS[pKey];
     if (!p) return;
-    const badge = document.createElement('span');
-    badge.className = 'platform-badge';
+    const url = game.purchaseLinks?.[pKey];
+    const badge = document.createElement(url ? 'a' : 'span');
+    badge.className = url ? 'platform-badge platform-badge--linked' : 'platform-badge';
+    if (url) {
+      badge.href   = url;
+      badge.target = '_blank';
+      badge.rel    = 'noopener noreferrer';
+    }
     badge.textContent = p.label;
     badge.style.color       = p.color;
     badge.style.borderColor = `${p.color}44`;

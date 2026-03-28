@@ -14,6 +14,9 @@
    note          : 補足テキスト。不要なら null（→ note記載ルール 参照）
    link          : 公式サイト or 購入ページのURL。なければ null
    highlight     : 注目タイトルは true、通常は false
+   purchaseLinks : プラットフォームごとの購入先URL（省略 or null で非表示）
+                   例: { SW1: "https://www.amazon.co.jp/dp/XXXX", PS5: "..." }
+                   キーは platforms と同じ文字列。URLがない機種は省略でよい
    sourceUrl     : 発売日情報の参照元URL。表示しない。なければ null
    sourceName    : 参照元名称（例: "任天堂公式", "ファミ通"）。なければ null
    lastVerifiedAt: 最終確認日 "YYYY-MM-DD"。なければ null
@@ -437,6 +440,11 @@ const games = [
     note:           "シリーズ7作品収録。ランクマッチなどオンライン機能新搭載",
     link:           "https://www.capcom-games.com/megaman/starforce/ja-jp/",
     highlight:      true,
+    purchaseLinks:  {
+      SW1: "https://www.amazon.co.jp/dp/B0G8HXTJ95",
+      PS5: "https://www.amazon.co.jp/dp/B0G8FN3MFD",
+      PS4: "https://www.amazon.co.jp/dp/B0G8F4CRFW",
+    },
     sourceUrl:      "https://www.capcom-games.com/megaman/starforce/ja-jp/",
     sourceName:     "Capcom公式",
     lastVerifiedAt: "2026-03-25",
