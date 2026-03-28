@@ -386,6 +386,56 @@ function appendSep(list, text, extraClass) {
   list.appendChild(sep);
 }
 
+/* ─── ゲームカード: ボタン生成 ──────────────────────────── */
+function buildGameButtons(game) {
+  const released = isReleased(game.date);
+  const wrap = document.createElement('div');
+  wrap.className = 'game-card-btns';
+
+  // ── プライマリ: 予約する / 購入する ─────────────────────
+  // amazonUrl がある場合のみ表示（ない場合はボタン自体を出さない）
+  if (game.amazonUrl) {
+    const btn = document.createElement('a');
+    btn.className = 'card-btn card-btn--primary';
+    btn.href      = game.amazonUrl;
+    btn.target    = '_blank';
+    btn.rel       = 'noopener noreferrer';
+    btn.textContent = released ? '購入する' : '予約する';
+    wrap.appendChild(btn);
+  }
+
+  // ── Amazonで探す ─────────────────────────────────────────
+  // amazonSearchUrl が明示されていればそれを使用、なければタイトルで自動生成
+  const searchUrl = game.amazonSearchUrl
+    || `https://www.amazon.co.jp/s?k=${encodeURIComponent(game.title)}`;
+  const searchBtn = document.createElement('a');
+  searchBtn.className   = 'card-btn card-btn--sub';
+  searchBtn.href        = searchUrl;
+  searchBtn.target      = '_blank';
+  searchBtn.rel         = 'noopener noreferrer';
+  searchBtn.textContent = 'Amazonで探す';
+  wrap.appendChild(searchBtn);
+
+  // ── 公式サイト ───────────────────────────────────────────
+  // officialUrl または link どちらでも受け付ける（移行期の互換）
+  const officialUrl = game.officialUrl || game.link;
+  const officialBtn = document.createElement(officialUrl ? 'a' : 'span');
+  officialBtn.className   = 'card-btn card-btn--sub';
+  officialBtn.textContent = '公式サイト';
+  if (officialUrl) {
+    officialBtn.href   = officialUrl;
+    officialBtn.target = '_blank';
+    officialBtn.rel    = 'noopener noreferrer';
+  } else {
+    officialBtn.classList.add('card-btn--disabled');
+    officialBtn.setAttribute('aria-disabled', 'true');
+    officialBtn.title = '公式サイト未登録';
+  }
+  wrap.appendChild(officialBtn);
+
+  return wrap;
+}
+
 /* ─── ゲームカード ──────────────────────────────────────── */
 function makeGameCard(game) {
   const card = document.createElement('div');
@@ -477,59 +527,7 @@ function makeGameCard(game) {
     info.appendChild(note);
   }
 
-  // ── ボタン群 ────────────────────────────────────────────
-  // 左:「予約する」  右:「Amazon検索へ」「公式サイト」
-  const btnWrap = document.createElement('div');
-  btnWrap.className = 'game-card-btns';
-
-  // 「予約する」— game.amazonUrl がある場合のみ有効（現データは常に無効）
-  const hasReserve = Boolean(game.amazonUrl);
-  const reserveBtn = document.createElement(hasReserve ? 'a' : 'span');
-  reserveBtn.className = 'card-btn card-btn--primary';
-  reserveBtn.textContent = '予約する';
-  if (hasReserve) {
-    reserveBtn.href   = game.amazonUrl;
-    reserveBtn.target = '_blank';
-    reserveBtn.rel    = 'noopener noreferrer';
-  } else {
-    reserveBtn.classList.add('card-btn--disabled');
-    reserveBtn.setAttribute('aria-disabled', 'true');
-    reserveBtn.title  = '現在、Amazon予約ページが見つかっていません';
-  }
-
-  // サブボタン群（右）
-  const subGroup = document.createElement('div');
-  subGroup.className = 'game-card-btns-sub';
-
-  // 「Amazon検索へ」— 常に有効（タイトル＋機種で自動検索）
-  const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(game.title)}`;
-  const searchBtn = document.createElement('a');
-  searchBtn.className = 'card-btn card-btn--sub';
-  searchBtn.href      = searchUrl;
-  searchBtn.target    = '_blank';
-  searchBtn.rel       = 'noopener noreferrer';
-  searchBtn.textContent = 'Amazon検索へ';
-  subGroup.appendChild(searchBtn);
-
-  // 「公式サイト」— game.link がある場合のみ有効
-  const hasOfficial = Boolean(game.link);
-  const officialBtn = document.createElement(hasOfficial ? 'a' : 'span');
-  officialBtn.className = 'card-btn card-btn--sub';
-  officialBtn.textContent = '公式サイト';
-  if (hasOfficial) {
-    officialBtn.href   = game.link;
-    officialBtn.target = '_blank';
-    officialBtn.rel    = 'noopener noreferrer';
-  } else {
-    officialBtn.classList.add('card-btn--disabled');
-    officialBtn.setAttribute('aria-disabled', 'true');
-    officialBtn.title  = '現在、公式サイトURLが未設定です';
-  }
-  subGroup.appendChild(officialBtn);
-
-  btnWrap.appendChild(reserveBtn);
-  btnWrap.appendChild(subGroup);
-  info.appendChild(btnWrap);
+  info.appendChild(buildGameButtons(game));
 
   // 最終確認日・参照元（未来の確定タイトルのみリスト表示）
   if (game.lastVerifiedAt && game.date && new Date(game.date) >= today()) {
