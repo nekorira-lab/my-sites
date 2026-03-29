@@ -396,17 +396,8 @@ function buildGameButtons(game) {
   const links = game.purchaseLinks || {};
   const linkedPlatforms = game.platforms.filter(pKey => links[pKey]);
 
-  if (linkedPlatforms.length === 1) {
-    // 単一機種: 従来の「予約する」「購入する」
-    const btn = document.createElement('a');
-    btn.className   = 'card-btn card-btn--primary';
-    btn.href        = links[linkedPlatforms[0]];
-    btn.target      = '_blank';
-    btn.rel         = 'noopener noreferrer';
-    btn.textContent = released ? '購入する' : '予約する';
-    wrap.appendChild(btn);
-  } else if (linkedPlatforms.length > 1) {
-    // 複数機種: 「購入先:」行
+  if (linkedPlatforms.length >= 1) {
+    // 購入先: 機種別ボタン行
     const buyRow = document.createElement('div');
     buyRow.className = 'game-card-buy-row';
 
