@@ -686,7 +686,7 @@ const games = [
     link:           null,
     highlight:      true,
     purchaseLinks:  {
-      PS5: "https://www.amazon.co.jp/dp/B0G6JQ1TXG",
+      PS5_deluxe: "https://www.amazon.co.jp/dp/B0G6JQ1TXG",
     },
     sourceUrl:      "https://www.amazon.co.jp/dp/B0G6JQ1TXG",
     sourceName:     "Amazon.co.jp",
