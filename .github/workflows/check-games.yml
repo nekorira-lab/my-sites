@@ -112,6 +112,36 @@ jobs:
 
             console.log(`  ℹ️  ${data.length} 件のエントリを確認します`);
 
+            // --- id 重複チェック ---
+            const idCount = {};
+            for (const item of data) {
+              if (item.id) idCount[item.id] = (idCount[item.id] || 0) + 1;
+            }
+            for (const [id, count] of Object.entries(idCount)) {
+              if (count > 1) {
+                console.error(`  ❌ id "${id}" が ${count} 件重複しています`);
+                hasError = true;
+              }
+            }
+
+            // --- エントリ重複チェック（同タイトル・同日・同機種） ---
+            for (let i = 0; i < data.length; i++) {
+              for (let j = i + 1; j < data.length; j++) {
+                const a = data[i], b = data[j];
+                if (a.title === b.title && a.date === b.date && a.date !== null) {
+                  const overlap = (a.platforms || []).filter(p => (b.platforms || []).includes(p));
+                  if (overlap.length > 0) {
+                    console.error(
+                      `  ❌ エントリ重複: "${a.title}" (${a.date}) が` +
+                      ` [${overlap.join(", ")}] で重複しています` +
+                      ` (id: "${a.id}" と "${b.id}")`
+                    );
+                    hasError = true;
+                  }
+                }
+              }
+            }
+
             // --- 各エントリを確認 ---
             for (let i = 0; i < data.length; i++) {
               const item = data[i];
@@ -123,6 +153,12 @@ jobs:
                   console.error(`  ❌ [${label}] フィールド "${field}" がありません`);
                   hasError = true;
                 }
+              }
+
+              // genre は空文字不可
+              if ("genre" in item && item.genre === "") {
+                console.error(`  ❌ [${label}] genre が空文字です。ジャンルを設定してください`);
+                hasError = true;
               }
 
               // date は "YYYY-MM-DD" 形式または null
@@ -166,6 +202,21 @@ jobs:
                     `  ❌ [${label}] lastVerifiedAt の形式が不正です: "${item.lastVerifiedAt}" (例: "2026-03-25" または null)`
                   );
                   hasError = true;
+                }
+              }
+
+              // purchaseLinks のキー形式チェック
+              // 許可: "SW2", "PS5" 等の機種キー、または "SW2_deluxe" 等の _deluxe サフィックス
+              if (item.purchaseLinks && typeof item.purchaseLinks === "object") {
+                for (const key of Object.keys(item.purchaseLinks)) {
+                  const baseKey = key.replace(/_deluxe$/, "");
+                  if (!VALID_PLATFORMS.includes(baseKey)) {
+                    console.error(
+                      `  ❌ [${label}] purchaseLinks に不正なキーがあります: "${key}"` +
+                      ` (許可形式: SW2 / SW2_deluxe など)`
+                    );
+                    hasError = true;
+                  }
                 }
               }
 
