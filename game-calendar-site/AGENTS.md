@@ -54,6 +54,12 @@ const REFERENCE_GAMES = [
 **platforms の値:**
 `SW2`（Switch 2）/ `SW1`（Switch）/ `PS5` / `PS4` / `XBX`（Xbox）/ `PC` / `MULTI`
 
+**platforms の収集ルール（重要）:**
+- ファミ通のページには機種ごとに列が分かれている。**同じタイトルが複数機種に掲載されている場合は、すべての機種を `platforms` 配列に含める**
+- 例: SW2版とPS5版が同日発売 → `platforms: ["SW2", "PS5"]` として1エントリにまとめる
+- 機種ごとに発売日が異なる場合のみ、別エントリに分ける
+- **ファミ通以外のサイト（メーカー公式・Amazon等）を独自に参照してプラットフォームを補完しない**。情報源はファミ通に統一する
+
 ### ステップ 3: 比較スクリプトを実行する
 
 ```sh
@@ -79,9 +85,53 @@ node tools/compare-week.js
 | `note` | 海外先行発売・特記事項があれば記述、なければ `null` |
 | `link` | 公式サイトURL。なければ `null` |
 | `highlight` | 注目タイトルは `true`、通常は `false` |
+| `purchaseLinks` | 機種ごとのAmazon Japan URL（後述） |
 | `sourceUrl` | `"https://www.famitsu.com/schedule"` |
 | `sourceName` | `"ファミ通"` |
 | `lastVerifiedAt` | 今日の日付 `"YYYY-MM-DD"` |
+
+### purchaseLinks・エディション確認の手順
+
+各タイトルについて **Amazon Japan（https://www.amazon.co.jp）のみ** を使って以下を確認する。
+他のサイト（楽天・ヨドバシ・メーカー公式など）は参照しない。
+
+#### ステップA: Amazon で検索する
+
+`https://www.amazon.co.jp/s?k=タイトル名+機種名` で検索し、**出品者・出荷元がともに「Amazon.co.jp」** の商品のみを対象とする（マーケットプレイス出品者・他社倉庫からの発送は除く）。この条件は `purchaseLinks` に設定するURLにも同様に適用する。
+
+#### ステップB: エディションの確認
+
+検索結果に**複数のエディション**（例: 通常版・デラックスエディション・Ultimate Edition など）が存在する場合、以下のルールに従う。
+
+**発売日が異なるエディションは別エントリにする:**
+- 各エントリの `date` は Amazon 商品ページに記載された発売日を使用する
+- `note` フィールドにエディション名を記載する（例: `"デラックスエディション"`）
+- `id` にもエディションを反映する（例: `"pragmata-ps5-deluxe"`）
+- 通常版（先行発売でない方）は `highlight: true`、デラックス等は `highlight: false`
+
+**発売日が同じエディションは1エントリにまとめる:**
+- 同日発売の通常版とデラックス版は別エントリにしない
+- 通常版の `purchaseLinks` に標準版のURLを設定すれば十分
+- デラックス版のASINを追加登録しない
+
+**複数機種が同日発売の場合は1エントリにまとめる:**
+- 例: PS5版とSW2版が同じ日付 → `platforms: ["PS5", "SW2"]` として1エントリ
+- `purchaseLinks` に各機種のURLをまとめて設定する
+
+エディションが1種類しかない場合は通常通り1エントリでよい。
+
+#### ステップC: purchaseLinks を設定する
+
+```js
+purchaseLinks: {
+  SW2: "https://www.amazon.co.jp/dp/XXXXXXXXXX",
+  PS5: "https://www.amazon.co.jp/dp/XXXXXXXXXX",
+},
+```
+
+- URLは `/dp/XXXXXXXXXX` 形式の商品ページURLを使用する（検索結果ページのURLは不可）
+- Amazon に商品ページが見つからない場合はそのキーを省略する
+- パッケージ版・ダウンロード版が両方ある場合はパッケージ版を優先する
 
 **`genre` の目安:**
 
@@ -131,6 +181,8 @@ node tools/compare-week.js
 - `genre` フィールドを `""` のまま残さない
 - `id` が既存エントリと重複しないよう確認する
 - 全週の更新が完了したら最後にまとめてコミットする
+- **プラットフォームの漏れに注意**: `id` に機種名（`-sw2` など）を含めない。1タイトル1エントリを原則とし、すべての対応機種を `platforms` に列挙する
+- **`note` フィールドに機種名を書かない**（`"Switch 2版"` のような記述は不要）。機種情報は `platforms` で管理する
 
 ---
 
