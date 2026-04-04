@@ -19,7 +19,7 @@
 // ═══════════════════════════════════════════════════════════
 // ① 比較対象週の月曜日を設定（YYYY-MM-DD）
 // ═══════════════════════════════════════════════════════════
-const COMPARE_WEEK_START = '2026-03-23';
+const COMPARE_WEEK_START = '2026-04-06';
 
 // ─────────────────────────────────────────────────────────
 // 見本サイトの参照元（出力に表示されます）
@@ -38,29 +38,14 @@ const REFERENCE_SOURCE_URL  = 'https://www.famitsu.com/schedule';
 //     （日本語公式タイトルがある場合は日本語）
 // ═══════════════════════════════════════════════════════════
 const REFERENCE_GAMES = [
-  // ── 出典: ファミ通 発売スケジュール + brightdays.jp（2026-03-26〜03-27）──
-
-  // 3月26日（木）
-  { date: "2026-03-26", title: "Until Then",                                    platforms: ["SW1", "PS5"] },
-  { date: "2026-03-26", title: "MARVEL COSMIC INVASION",                        platforms: ["SW2", "SW1", "PS5"] },
-  { date: "2026-03-26", title: "魔女と亡霊のヴォロンテ",                         platforms: ["SW1"] },
-  { date: "2026-03-26", title: "スーパーマリオブラザーズ ワンダー Nintendo Switch 2 Edition", platforms: ["SW2"] },
-  { date: "2026-03-26", title: "エトランジュ オーヴァーロード",                   platforms: ["SW1", "PS5", "PS4"] },
-  { date: "2026-03-26", title: "Winning Post 10 2026",                          platforms: ["PS5", "PS4", "SW2", "SW1", "PC"] },
-  { date: "2026-03-26", title: "ハンサムロンダリング -the mystic lover-",         platforms: ["SW1"] },
-  { date: "2026-03-26", title: "DIABOLIK LOVERS LUNATIC FATE GRAND EDITION",    platforms: ["SW1"] },
-  { date: "2026-03-26", title: "Sweet Starlight Sisters",                       platforms: ["SW1", "PC"] },
-  { date: "2026-03-26", title: "Screamer",                                      platforms: ["XBX", "PC"] },
-  { date: "2026-03-26", title: "ケムコRPGセレクション Vol.13",                    platforms: ["SW1"] },
-  { date: "2026-03-26", title: "文字化化",                                       platforms: ["SW1"] },
-  { date: "2026-03-26", title: "The Midnight Walk",                             platforms: ["SW2"] },
-  { date: "2026-03-26", title: "深 四のの目 -陰陽の巫女-",                       platforms: ["SW1", "PC"] },
-  { date: "2026-03-26", title: "Curse Warrior",                                 platforms: ["SW1", "PS5", "PS4"] },
-  { date: "2026-03-26", title: "おかゆにゅ～～む！R",                             platforms: ["SW1"] },
-
-  // 3月27日（金）
-  { date: "2026-03-27", title: "流星のロックマン パーフェクトコレクション",         platforms: ["SW1", "PS5", "PS4", "XBX", "PC"] },
-  { date: "2026-03-27", title: "ライフ イズ ストレンジ リユニオン",                platforms: ["PS5", "XBX", "PC"] },
+  // ── 出典: ファミ通 発売スケジュール（2026-04-08〜04-10）──
+  { date: "2026-04-08", title: "Pokémon Champions",                         platforms: ["SW1"] },
+  { date: "2026-04-08", title: "STARFIELD",                                 platforms: ["PS5"] },
+  { date: "2026-04-09", title: "ザ・ローグ：プリンス オブ ペルシャ",         platforms: ["SW2", "SW1", "PS5"] },
+  { date: "2026-04-09", title: "オレオール キボウのツバサ",                   platforms: ["PS5", "PS4", "SW1"] },
+  { date: "2026-04-09", title: "メモリーズオフ 双想 Break out of my shell",   platforms: ["SW1", "PS5", "PS4", "PC"] },
+  { date: "2026-04-09", title: "メモリーズオフ双想 DOUBLE PACK",               platforms: ["SW1"] },
+  { date: "2026-04-10", title: "ソニックレーシング クロスワールド Nintendo Switch 2 Edition", platforms: ["SW2"] },
 ];
 
 // ===========================================================
@@ -70,6 +55,13 @@ const REFERENCE_GAMES = [
 const fs   = require('fs');
 const path = require('path');
 
+function formatLocalDate(date) {
+  const year  = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day   = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // games.js を読み込む（docs/ フォルダに移動済み）
 const gamesPath = path.join(__dirname, '../../docs/assets/js/games.js');
 const src       = fs.readFileSync(gamesPath, 'utf-8');
@@ -77,14 +69,14 @@ const fn        = new Function(src + '\nreturn games;');
 const games     = fn();
 
 // 今日の日付
-const TODAY = new Date().toISOString().slice(0, 10);
+const TODAY = formatLocalDate(new Date());
 
 // 週の終端（日曜）を算出
 const weekStart    = new Date(COMPARE_WEEK_START + 'T00:00:00');
 const weekEnd      = new Date(weekStart);
 weekEnd.setDate(weekEnd.getDate() + 6);
 const weekStartStr = COMPARE_WEEK_START;
-const weekEndStr   = weekEnd.toISOString().slice(0, 10);
+const weekEndStr   = formatLocalDate(weekEnd);
 
 // 部分一致で同一タイトルか判定
 function isSameTitle(a, b) {
