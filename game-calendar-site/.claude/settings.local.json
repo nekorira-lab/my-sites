@@ -20,11 +20,16 @@
       "WebFetch(domain:gamewith.jp)",
       "WebFetch(domain:switchsoku.com)",
       "WebFetch(domain:samudari.com)",
-      "WebFetch(domain:www.gameman.jp)"
+      "WebFetch(domain:www.gameman.jp)",
+      "Read(//c/Users/Administrator/**)",
+      "Read(//c/Users/Administrator/.claude/**)",
+      "Read(//e/AI/claude/.claude/**)",
+      "Bash(cat \"e:/AI/claude/.claude/projects/works/my-sites/.github/workflows/\"*.yml)"
     ],
     "additionalDirectories": [
       "E:\\AI\\claude\\.claude\\projects\\works\\my-sites\\docs\\assets\\js",
-      "E:\\AI\\claude\\.claude\\projects\\works\\my-sites\\docs\\assets\\css"
+      "E:\\AI\\claude\\.claude\\projects\\works\\my-sites\\docs\\assets\\css",
+      "e:\\AI\\claude\\.claude"
     ]
   }
 }
