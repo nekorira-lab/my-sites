@@ -393,11 +393,24 @@ function buildGameButtons(game) {
   wrap.className = 'game-card-btns';
 
   // ── 購入 / 予約ボタン ────────────────────────────────────
+  // purchaseLinks のキー形式:
+  //   "SW2"        → 標準版ボタン
+  //   "SW2_deluxe" → デラックス版ボタン（"Switch 2版を予約（DX）"）
   const links = game.purchaseLinks || {};
-  const linkedPlatforms = game.platforms.filter(pKey => links[pKey]);
 
-  if (linkedPlatforms.length >= 1) {
-    // 購入先: 機種別ボタン行
+  // 標準版: platforms の順番に沿ってボタンを並べる
+  const standardEntries = game.platforms
+    .filter(pKey => links[pKey])
+    .map(pKey => ({ pKey, url: links[pKey], isDeluxe: false }));
+
+  // デラックス版: "_deluxe" サフィックスのキーをすべて拾う
+  const deluxeEntries = Object.keys(links)
+    .filter(key => key.endsWith('_deluxe'))
+    .map(key => ({ pKey: key.replace('_deluxe', ''), url: links[key], isDeluxe: true }));
+
+  const buttonEntries = [...standardEntries, ...deluxeEntries];
+
+  if (buttonEntries.length >= 1) {
     const buyRow = document.createElement('div');
     buyRow.className = 'game-card-buy-row';
 
@@ -406,15 +419,18 @@ function buildGameButtons(game) {
     label.textContent = released ? '購入先:' : '予約先:';
     buyRow.appendChild(label);
 
-    linkedPlatforms.forEach(pKey => {
+    buttonEntries.forEach(({ pKey, url, isDeluxe }) => {
       const p = PLATFORMS[pKey];
       if (!p) return;
       const btn = document.createElement('a');
       btn.className   = 'card-btn card-btn--platform';
-      btn.href        = links[pKey];
+      btn.href        = url;
       btn.target      = '_blank';
       btn.rel         = 'noopener noreferrer';
-      btn.textContent = released ? `${p.label}版を購入` : `${p.label}版を予約`;
+      const action    = released ? '購入' : '予約';
+      btn.textContent = isDeluxe
+        ? `${p.label}版を${action}（DX）`
+        : `${p.label}版を${action}`;
       btn.style.color       = p.color;
       btn.style.borderColor = `${p.color}66`;
       btn.style.background  = `${p.color}12`;

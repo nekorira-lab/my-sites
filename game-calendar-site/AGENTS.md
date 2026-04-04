@@ -124,10 +124,14 @@ node tools/compare-week.js
 
 ```js
 purchaseLinks: {
-  SW2: "https://www.amazon.co.jp/dp/XXXXXXXXXX",
-  PS5: "https://www.amazon.co.jp/dp/XXXXXXXXXX",
+  SW2:        "https://www.amazon.co.jp/dp/XXXXXXXXXX",  // 標準版
+  PS5:        "https://www.amazon.co.jp/dp/XXXXXXXXXX",  // 標準版
+  SW2_deluxe: "https://www.amazon.co.jp/dp/XXXXXXXXXX",  // デラックス版
+  PS5_deluxe: "https://www.amazon.co.jp/dp/XXXXXXXXXX",  // デラックス版
 },
 ```
+
+デラックス版は `機種名_deluxe` キーで追加する。ボタンには自動で「（DX）」が付く。
 
 - URLは `/dp/XXXXXXXXXX` 形式の商品ページURLを使用する（検索結果ページのURLは不可）
 - Amazon に商品ページが見つからない場合はそのキーを省略する
