@@ -416,7 +416,8 @@ function buildGameButtons(game) {
 
     const label = document.createElement('span');
     label.className   = 'game-card-buy-label';
-    label.textContent = released ? '購入先:' : '予約先:';
+    const hasMix = !released && game.releasedPlatforms?.length > 0;
+    label.textContent = released ? '購入先:' : hasMix ? '購入・予約先:' : '予約先:';
     buyRow.appendChild(label);
 
     buttonEntries.forEach(({ pKey, url, isDeluxe }) => {
@@ -427,7 +428,8 @@ function buildGameButtons(game) {
       btn.href        = url;
       btn.target      = '_blank';
       btn.rel         = 'noopener noreferrer';
-      const action    = released ? '購入' : '予約';
+      const pReleased = released || (game.releasedPlatforms || []).includes(pKey);
+      const action    = pReleased ? '購入' : '予約';
       btn.textContent = isDeluxe
         ? `${p.label}版を${action}（DX）`
         : `${p.label}版を${action}`;

@@ -713,20 +713,23 @@ const games = [
 
   // ── 5月 ──────────────────────────────────────────────────
   {
-    id:             "indiana-jones-sw2",
-    title:          "インディ・ジョーンズ/大いなる円環",
-    date:           "2026-05-12",
-    platforms:      ["SW2"],
-    genre:          "アクションアドベンチャー",
-    note:           null,
-    link:           null,
-    highlight:      false,
-    purchaseLinks:  {
+    id:               "indiana-jones",
+    title:            "インディ・ジョーンズ/大いなる円環",
+    date:             "2026-05-12",
+    platforms:        ["SW2", "PS5", "XBX"],
+    genre:            "アクションアドベンチャー",
+    note:             "後発対応機種あり（一部機種は先行発売済み）",
+    link:             null,
+    highlight:        false,
+    releasedPlatforms: ["PS5", "XBX"],
+    purchaseLinks:    {
       SW2: "https://www.amazon.co.jp/dp/B0GS52YG25",
+      PS5: "https://www.amazon.co.jp/dp/B0FDQ1DSKN",
+      XBX: "https://www.amazon.co.jp/dp/B0DFPPC12G",
     },
-    sourceUrl:      null,
-    sourceName:     "旧data.js",
-    lastVerifiedAt: null,
+    sourceUrl:        null,
+    sourceName:       "旧data.js",
+    lastVerifiedAt:   "2026-04-04",
   },
   {
     id:             "yoshi-fukashigi",
