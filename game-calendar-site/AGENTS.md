@@ -212,6 +212,45 @@ purchaseLinks: {
 | 格闘 | 格闘ゲーム |
 | ホラーアドベンチャー | ホラー系 |
 
+### ステップ 4b: `link`（公式サイトURL）を設定する
+
+各エントリの `link` フィールドに公式サイトURLを設定する。
+`null` のまま放置しない。見つからない場合のみ `null` にする。
+
+#### メーカー別URLパターン（まずここを試す）
+
+| メーカー | URLパターン | 例 |
+|---|---|---|
+| 任天堂（Switch） | `https://www.nintendo.com/jp/games/switch/[コード]/index.html` | — |
+| 任天堂（Switch 2） | `https://www.nintendo.com/jp/games/switch2/[コード]/index.html` | `aakga`（ヨッシーとフカシギの図鑑） |
+| カプコン | `https://www.capcom-games.com/[ゲーム名]/ja-jp/` | `pragmata` |
+| ベセスダ | `https://www.bethesda.net/ja/game/[ゲーム名]` | `indianajones` |
+| スクウェア・エニックス | `https://www.jp.square-enix.com/[ゲーム名]/` | — |
+| コナミ | `https://www.konami.com/games/jp/ja/[ゲーム名]/` | — |
+| セガ | `https://sega.jp/[ゲーム名]/` | — |
+| バンダイナムコ | `https://www.bandainamcoent.co.jp/game/[ゲーム名]/` | — |
+| フロム・ソフトウェア | `https://www.fromsoftware.jp/jp/[ゲーム名]/` | — |
+
+**パターン試行 → 404なら下記の検索フローへ。**
+
+#### URLが不明な場合の検索フロー
+
+1. WebSearch で `"[タイトル名]" 公式サイト` を検索する
+2. 検索結果から **メーカー公式ドメイン** のURLを選ぶ（ファミ通・4gamer・Amazonなどは不可）
+3. WebFetch でページを開き、タイトル名が合っているか確認してから設定する
+
+#### URLの優先順位
+
+1. **日本語公式サイト**（`/ja-jp/`, `/jp/ja/`, `.com/jp/` など）を最優先
+2. 日本語版がない場合は**英語公式サイト**（`/en-us/`, `.net/en/` など）
+3. メーカー公式がない場合は **Nintendo Store / PlayStation Store / Steam** のゲームページ
+
+#### 注意事項
+
+- Amazon・ファミ通・4Gamer・Wikipediaなどのレビュー・販売サイトは `link` に設定しない
+- URLが存在するか WebFetch で必ず確認してから設定する（404はNG）
+- 同一タイトルの複数エントリ（デラックス版など）には同じ `link` を設定してよい
+
 ### ステップ 5: 再確認
 
 ```sh

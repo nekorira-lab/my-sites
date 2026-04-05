@@ -1,0 +1,155 @@
+# ============================================================
+# update-ranking.yml
+# ファミ通の週間ゲームソフト販売ランキングを毎週自動更新する
+# 実行タイミング: 毎週金曜日 10:00 JST（ファミ通は木曜更新のため翌日実行）
+# ============================================================
+
+name: Update Weekly Ranking
+
+on:
+  schedule:
+    - cron: '0 1 * * 5'  # UTC 01:00 Friday = JST 10:00 Friday
+  workflow_dispatch:       # GitHub の Actions タブから手動実行も可能
+
+jobs:
+  update-ranking:
+    name: Fetch Famitsu ranking and update ranking.js
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch ranking and update ranking.js
+        run: |
+          node - <<'EOF'
+          const https = require('https');
+          const fs    = require('fs');
+          const path  = require('path');
+
+          // ── ファミ通ランキングページを取得 ────────────────────
+          function fetchPage(url) {
+            return new Promise((resolve, reject) => {
+              const options = {
+                headers: {
+                  'User-Agent':      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36',
+                  'Accept':          'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                  'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3',
+                },
+              };
+              https.get(url, options, (res) => {
+                if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                  return fetchPage(res.headers.location).then(resolve).catch(reject);
+                }
+                let body = '';
+                res.setEncoding('utf8');
+                res.on('data', chunk => { body += chunk; });
+                res.on('end',  () => resolve(body));
+              }).on('error', reject);
+            });
+          }
+
+          // ── __NEXT_DATA__ から gameSalesRankingData を抽出 ───
+          function extractRankingData(html) {
+            // Next.js の __NEXT_DATA__ script タグを探す
+            const nextDataMatch = html.match(/<script[^>]+id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+            if (!nextDataMatch) throw new Error('__NEXT_DATA__ が見つかりませんでした');
+
+            const json = JSON.parse(nextDataMatch[1]);
+
+            // ネストされた props の中から gameSalesRankingData を再帰的に探す
+            function findKey(obj, key) {
+              if (!obj || typeof obj !== 'object') return null;
+              if (key in obj) return obj[key];
+              for (const v of Object.values(obj)) {
+                const found = findKey(v, key);
+                if (found) return found;
+              }
+              return null;
+            }
+
+            const data = findKey(json, 'gameSalesRankingData');
+            if (!data) throw new Error('gameSalesRankingData が見つかりませんでした');
+            return data;
+          }
+
+          // ── ranking.js を生成 ────────────────────────────────
+          function generateRankingJs(data) {
+            const today = new Date().toISOString().slice(0, 10);
+
+            // period: "2026年03月23日～2026年03月29日" → そのまま使用
+            const period = data.title || '';
+
+            // Top10 に絞る
+            const items = (data.rankingData || []).slice(0, 10);
+
+            const itemsJs = items.map(item => {
+              const rank  = Number(item.rank);
+              const title = item.title.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+              const plat  = (item.platform || '').replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+              const sales = Number(item.salesCount);
+              return `    { rank: ${rank},  title: "${title}", platform: "${plat}", sales: ${sales} },`;
+            }).join('\n');
+
+            return `/* ============================================================
+   ranking.js — ファミ通 週間ゲームソフト販売ランキング
+   参照元: https://www.famitsu.com/ranking/game-sales
+   ※ このファイルは GitHub Actions により毎週自動更新されます
+   ============================================================ */
+
+const weeklyRanking = {
+  period:     "${period}",
+  source:     "ファミ通",
+  sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
+  updatedAt:  "${today}",
+  items: [
+${itemsJs}
+  ],
+};
+`;
+          }
+
+          // ── メイン ──────────────────────────────────────────
+          (async () => {
+            try {
+              console.log('📡 ファミ通ランキングページを取得中...');
+              const html = await fetchPage('https://www.famitsu.com/ranking/game-sales');
+
+              console.log('🔍 ランキングデータを抽出中...');
+              const data = extractRankingData(html);
+
+              console.log(`📊 集計期間: ${data.title}`);
+              console.log(`📋 ${data.rankingData?.length ?? 0} 件取得`);
+
+              const js      = generateRankingJs(data);
+              const outPath = path.join('docs', 'assets', 'js', 'ranking.js');
+
+              fs.writeFileSync(outPath, js, 'utf8');
+              console.log(`✅ ${outPath} を更新しました`);
+
+            } catch (err) {
+              console.error('❌ エラー:', err.message);
+              process.exit(1);
+            }
+          })();
+          EOF
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/assets/js/ranking.js
+          if git diff --staged --quiet; then
+            echo "変更なし — コミットをスキップします"
+          else
+            git commit -m "chore: update weekly ranking from Famitsu ($(date -u +%Y-%m-%d))"
+            git push
+            echo "✅ ranking.js をプッシュしました"
+          fi

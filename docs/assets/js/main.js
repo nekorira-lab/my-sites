@@ -36,30 +36,22 @@ function isReleased(dateStr) {
 }
 
 /* ─── ステータスバー ────────────────────────────────────── */
-function buildStatusBar() {
+function buildStatusBar(year, month) {
   const countEl = document.getElementById('status-count');
-  const nextEl  = document.getElementById('status-next');
-  const t = today();
+  if (!countEl) return;
 
-  if (countEl) {
-    countEl.textContent = `${games.length} タイトル`;
-  }
+  const y = year  ?? currentYear;
+  const m = month ?? currentMonth;
 
-  if (nextEl) {
-    const upcoming = games
-      .filter(g => g.date && new Date(g.date) >= t)
-      .sort((a, b) => a.date.localeCompare(b.date));
+  const count = games.filter(g => {
+    if (!g.date) return false;
+    const [gy, gm] = g.date.split('-').map(Number);
+    return gy === y && gm - 1 === m;
+  }).length;
 
-    if (upcoming.length > 0) {
-      const next = upcoming[0];
-      const diff = Math.ceil((new Date(next.date) - t) / 86400000);
-      nextEl.textContent = diff === 0
-        ? `次回：${next.title}（本日）`
-        : `次回：${next.title}（あと${diff}日）`;
-    } else {
-      nextEl.textContent = '発売予定なし';
-    }
-  }
+  countEl.textContent = count > 0
+    ? `${m + 1}月発売予定 ${count}タイトル`
+    : `${m + 1}月発売なし`;
 }
 
 /* ─── 次回発売スポットライト ─────────────────────────────── */
@@ -110,46 +102,118 @@ function buildNextUp() {
   if (countdownEl) countdownEl.textContent = countdownText;
 }
 
-/* ─── ティッカー ────────────────────────────────────────── */
+/* ─── ランキングパネル ──────────────────────────────────── */
+function buildRankingPanel() {
+  const panel  = document.getElementById('ranking-panel');
+  const inner  = document.getElementById('ranking-panel-inner');
+  const toggle = document.getElementById('ranking-toggle');
+  if (!panel || !inner || !toggle) return;
+
+  const items = weeklyRanking?.items;
+  if (!items || items.length === 0) return;
+
+  // メタ行（集計期間・出典）
+  const meta = document.createElement('div');
+  meta.className = 'ranking-meta';
+  const sourceLink = weeklyRanking.sourceUrl
+    ? `<a href="${weeklyRanking.sourceUrl}" target="_blank" rel="noopener noreferrer">${weeklyRanking.source}</a>`
+    : weeklyRanking.source;
+  meta.innerHTML = `集計期間: ${weeklyRanking.period} ／ 出典: ${sourceLink}`;
+  inner.appendChild(meta);
+
+  // ランキングリスト
+  const list = document.createElement('div');
+  list.className = 'ranking-list';
+
+  items.forEach(entry => {
+    const row = document.createElement('div');
+    row.className = 'ranking-row';
+
+    const rankEl = document.createElement('span');
+    rankEl.className = 'ranking-row-rank' + (entry.rank <= 3 ? ' ranking-row-rank--top' : '');
+    rankEl.textContent = `${entry.rank}`;
+
+    const titleEl = document.createElement('span');
+    titleEl.className = 'ranking-row-title';
+    titleEl.textContent = entry.title;
+    titleEl.title = entry.title;
+
+    const platEl = document.createElement('span');
+    platEl.className = 'ranking-row-plat';
+    platEl.textContent = entry.platform;
+
+    const salesEl = document.createElement('span');
+    salesEl.className = 'ranking-row-sales';
+    salesEl.textContent = `${entry.sales.toLocaleString()}本`;
+
+    const amazonUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(entry.title)}`;
+    const btn = document.createElement('a');
+    btn.className = 'ranking-row-btn';
+    btn.href      = amazonUrl;
+    btn.target    = '_blank';
+    btn.rel       = 'noopener noreferrer';
+    btn.textContent = 'Amazon';
+
+    row.append(rankEl, titleEl, platEl, salesEl, btn);
+    list.appendChild(row);
+  });
+
+  inner.appendChild(list);
+
+  // トグル処理
+  toggle.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    panel.hidden = expanded;
+    if (!expanded) {
+      const headerBottom = document.querySelector('.site-header').getBoundingClientRect().bottom;
+      panel.style.top = `${headerBottom}px`;
+    }
+  });
+}
+
+/* ─── ティッカー（今週のランキング）────────────────────── */
 function buildTicker() {
-  const track = document.getElementById('ticker-track');
+  const track    = document.getElementById('ticker-track');
+  const labelEl  = document.querySelector('.ticker-label');
   if (!track) return;
 
-  const confirmed = games
-    .filter(g => g.date)
-    .sort((a, b) => a.date.localeCompare(b.date));
+  const items = weeklyRanking?.items;
+  if (!items || items.length === 0) return;
 
-  if (confirmed.length === 0) return;
+  if (labelEl && weeklyRanking.period) {
+    labelEl.title = `集計期間: ${weeklyRanking.period}`;
+  }
 
   const fragment = document.createDocumentFragment();
   [0, 1].forEach(() => {
-    confirmed.forEach(game => {
+    items.forEach(entry => {
       const item = document.createElement('span');
       item.className = 'ticker-item';
 
-      const parts  = game.date.split('-');
-      const pLabel = PLATFORMS[game.platforms[0]]?.label || game.platforms[0];
+      const rankSpan = document.createElement('span');
+      rankSpan.className = 'ticker-item-rank';
+      rankSpan.textContent = `${entry.rank}位`;
 
       const titleSpan = document.createElement('span');
       titleSpan.className = 'ticker-item-title';
-      titleSpan.textContent = game.title;
-
-      const dateSpan = document.createElement('span');
-      dateSpan.className = 'ticker-item-date';
-      dateSpan.textContent = `${parts[0]}.${parts[1]}.${parts[2]}`;
+      titleSpan.textContent = entry.title;
 
       const platSpan = document.createElement('span');
       platSpan.className = 'ticker-item-plat';
-      platSpan.textContent = pLabel;
+      platSpan.textContent = entry.platform;
 
-      item.append(titleSpan, dateSpan, platSpan);
+      const salesSpan = document.createElement('span');
+      salesSpan.className = 'ticker-item-date';
+      salesSpan.textContent = `${entry.sales.toLocaleString()}本`;
+
+      item.append(rankSpan, titleSpan, platSpan, salesSpan);
       fragment.appendChild(item);
     });
   });
 
   track.appendChild(fragment);
-  const duration = Math.max(40, confirmed.length * 8);
-  track.style.animationDuration = `${duration}s`;
+  track.style.animationDuration = '60s';
 }
 
 /* ─── カレンダー描画 ────────────────────────────────────── */
@@ -204,6 +268,7 @@ function buildCalendar(year, month) {
     if (dayGames.length > 0) {
       cell.classList.add('cal-cell--has-games');
       cell.setAttribute('aria-label', `${month + 1}月${d}日 — ${dayGames.length}タイトル`);
+      cell.dataset.date = key;
 
       const maxShow = 3;
       dayGames.slice(0, maxShow).forEach(game => cell.appendChild(makeBadge(game)));
@@ -211,6 +276,7 @@ function buildCalendar(year, month) {
         const more = document.createElement('span');
         more.className = 'badge-more';
         more.textContent = `+${dayGames.length - maxShow} more`;
+        more.title = dayGames.slice(maxShow).map(g => g.title).join('\n');
         cell.appendChild(more);
       }
     }
@@ -245,6 +311,7 @@ function makeBadge(game) {
   const badge = document.createElement('span');
   badge.className = 'game-badge';
   badge.textContent = game.title;
+  badge.title = game.title;
 
   const pInfo = PLATFORMS[game.platforms[0]];
   if (pInfo) {
@@ -253,6 +320,95 @@ function makeBadge(game) {
   }
   if (game.highlight) badge.classList.add('game-badge--highlight');
   return badge;
+}
+
+/* ─── カレンダーセルツールチップ ───────────────────────────── */
+let _calTooltip = null;
+let _tooltipHideTimer = null;
+
+function getCalTooltip() {
+  if (!_calTooltip) {
+    _calTooltip = document.createElement('div');
+    _calTooltip.className = 'cal-tooltip';
+    _calTooltip.hidden = true;
+    document.body.appendChild(_calTooltip);
+  }
+  return _calTooltip;
+}
+
+function showCellTooltip(cell, dateKey, dayGames) {
+  if (_tooltipHideTimer) { clearTimeout(_tooltipHideTimer); _tooltipHideTimer = null; }
+  const tt = getCalTooltip();
+  tt.innerHTML = '';
+
+  const [, m, d] = dateKey.split('-');
+  const header = document.createElement('div');
+  header.className = 'cal-tooltip-header';
+  header.textContent = `${parseInt(m)}月${parseInt(d)}日（${dayGames.length}タイトル）`;
+  tt.appendChild(header);
+
+  dayGames.forEach(game => {
+    const item = document.createElement('div');
+    item.className = 'cal-tooltip-item';
+
+    const dot = document.createElement('span');
+    dot.className = 'cal-tooltip-dot';
+    const pInfo = PLATFORMS[game.platforms[0]];
+    if (pInfo) dot.style.background = pInfo.color;
+
+    const title = document.createElement('span');
+    title.className = 'cal-tooltip-title';
+    title.textContent = game.title;
+
+    item.append(dot, title);
+    tt.appendChild(item);
+  });
+
+  tt.hidden = false;
+  positionCellTooltip(tt, cell);
+}
+
+function positionCellTooltip(tt, cell) {
+  const rect = cell.getBoundingClientRect();
+  const ttW  = tt.offsetWidth  || 220;
+  const ttH  = tt.offsetHeight || 80;
+  const vw   = window.innerWidth;
+  const vh   = window.innerHeight;
+  const gap  = 6;
+
+  // 右に出す → 入らなければ左に
+  let left = rect.right + gap;
+  if (left + ttW > vw - 8) left = rect.left - ttW - gap;
+  if (left < 8) left = 8;
+
+  // セルの上端に合わせ → はみ出すなら上にずらす
+  let top = rect.top;
+  if (top + ttH > vh - 8) top = vh - ttH - 8;
+  if (top < 8) top = 8;
+
+  tt.style.left = `${left}px`;
+  tt.style.top  = `${top}px`;
+}
+
+function hideCellTooltip() {
+  _tooltipHideTimer = setTimeout(() => {
+    if (_calTooltip) _calTooltip.hidden = true;
+  }, 80);
+}
+
+function initCalTooltip() {
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+
+  grid.addEventListener('mouseover', e => {
+    const cell = e.target.closest('.cal-cell--has-games');
+    if (!cell || !cell.dataset.date) { hideCellTooltip(); return; }
+    const dateKey  = cell.dataset.date;
+    const dayGames = games.filter(g => g.date === dateKey);
+    if (dayGames.length > 0) showCellTooltip(cell, dateKey, dayGames);
+  });
+
+  grid.addEventListener('mouseleave', hideCellTooltip);
 }
 
 /* ─── 凡例 ──────────────────────────────────────────────── */
@@ -567,21 +723,6 @@ function makeGameCard(game) {
 
   info.appendChild(buildGameButtons(game));
 
-  // 最終確認日・参照元（未来の確定タイトルのみリスト表示）
-  if (game.lastVerifiedAt && game.date && new Date(game.date) >= today()) {
-    const [y, m, d] = game.lastVerifiedAt.split('-').map(Number);
-    const verified = document.createElement('div');
-    verified.className = 'game-card-verified';
-    if (game.sourceUrl) {
-      verified.innerHTML = `確認: ${y}年${m}月${d}日 ／ <a href="${game.sourceUrl}" target="_blank" rel="noopener noreferrer">${game.sourceName || '出典'}</a>`;
-    } else if (game.sourceName) {
-      verified.textContent = `確認: ${y}年${m}月${d}日 ／ ${game.sourceName}`;
-    } else {
-      verified.textContent = `確認: ${y}年${m}月${d}日`;
-    }
-    info.appendChild(verified);
-  }
-
   card.append(dateCol, info);
   return card;
 }
@@ -591,6 +732,7 @@ function showCalendarView() {
   document.getElementById('calendar-view').classList.remove('view-panel--hidden');
   document.getElementById('list-view').classList.add('view-panel--hidden');
   currentView = 'calendar';
+  document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function showListView(mode, dateStr) {
@@ -607,21 +749,26 @@ function initControls() {
     currentMonth--;
     if (currentMonth < 0) { currentMonth = 11; currentYear--; }
     buildCalendar(currentYear, currentMonth);
+    buildStatusBar(currentYear, currentMonth);
   });
 
   document.getElementById('btn-next').addEventListener('click', () => {
     currentMonth++;
     if (currentMonth > 11) { currentMonth = 0; currentYear++; }
     buildCalendar(currentYear, currentMonth);
+    buildStatusBar(currentYear, currentMonth);
   });
 
-  document.getElementById('btn-list-view').addEventListener('click', () => {
-    showListView('all', null);
-  });
+  // view-switch: カレンダー側
+  document.getElementById('btn-to-calendar')?.addEventListener('click', showCalendarView);
+  document.getElementById('btn-list-view').addEventListener('click', () => showListView('all', null));
 
-  document.getElementById('btn-calendar-view').addEventListener('click', () => {
-    showCalendarView();
-  });
+  // view-switch: 一覧側
+  document.getElementById('btn-calendar-view').addEventListener('click', showCalendarView);
+  document.getElementById('btn-to-list')?.addEventListener('click', () => showListView('all', null));
+
+  // 一覧下部の「カレンダーに戻る」
+  document.getElementById('btn-calendar-view-bottom')?.addEventListener('click', showCalendarView);
 }
 
 /* ─── フッター更新日 ─────────────────────────────────────── */
@@ -641,10 +788,11 @@ function buildFooterDate() {
 
 /* ─── 初期化 ────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  buildNextUp();
   buildTicker();
+  buildRankingPanel();
   buildStatusBar();
   buildCalendar(currentYear, currentMonth);
   initControls();
   buildFooterDate();
+  initCalTooltip();
 });

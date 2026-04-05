@@ -24,7 +24,9 @@
       "Read(//c/Users/Administrator/**)",
       "Read(//c/Users/Administrator/.claude/**)",
       "Read(//e/AI/claude/.claude/**)",
-      "Bash(cat \"e:/AI/claude/.claude/projects/works/my-sites/.github/workflows/\"*.yml)"
+      "Bash(cat \"e:/AI/claude/.claude/projects/works/my-sites/.github/workflows/\"*.yml)",
+      "WebFetch(domain:www.famitsu.com)",
+      "Bash(gh workflow:*)"
     ],
     "additionalDirectories": [
       "E:\\AI\\claude\\.claude\\projects\\works\\my-sites\\docs\\assets\\js",
