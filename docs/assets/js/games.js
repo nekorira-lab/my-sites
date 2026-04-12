@@ -761,6 +761,10 @@ const games = [
     note:           null,
     link:           "https://007firstlightgame.com/",
     highlight:      true,
+    purchaseLinks:  {
+      PS5:        "https://www.amazon.co.jp/dp/B0G39D64ZH",
+      PS5_deluxe: "https://www.amazon.co.jp/dp/B0FZS6LBTB",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule/all-platforms/202605",
     sourceName:     "ファミ通 / IO Interactive公式",
     lastVerifiedAt: "2026-04-12",
@@ -811,6 +815,22 @@ const games = [
     highlight:      true,
     sourceUrl:      "https://www.jp.square-enix.com/el1000/",
     sourceName:     "Square Enix公式",
+    lastVerifiedAt: "2026-04-12",
+  },
+  {
+    id:             "007-first-light-sw2",
+    title:          "007 First Light",
+    date:           "2026-06-18",
+    platforms:      ["SW2"],
+    genre:          "アクションアドベンチャー",
+    note:           null,
+    link:           "https://007firstlightgame.com/",
+    highlight:      true,
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0FZRMWNL6",
+    },
+    sourceUrl:      "https://game.watch.impress.co.jp/docs/news/2100532.html",
+    sourceName:     "GAME Watch / IO Interactive公式",
     lastVerifiedAt: "2026-04-12",
   },
 
@@ -907,19 +927,6 @@ const games = [
      日程未定
   ═══════════════════════════════════════════════════════════ */
 
-  {
-    id:             "007-first-light-late-2026",
-    title:          "007 First Light",
-    date:           null,
-    platforms:      ["SW2"],
-    genre:          "アクションアドベンチャー",
-    note:           "2026年夏後半発売予定",
-    link:           "https://007firstlightgame.com/",
-    highlight:      true,
-    sourceUrl:      "https://game.watch.impress.co.jp/docs/news/2100532.html",
-    sourceName:     "GAME Watch / IO Interactive公式",
-    lastVerifiedAt: "2026-04-12",
-  },
   {
     id:             "fe-fortunes-weave",
     title:          "ファイアーエムブレム 万紫千紅",
