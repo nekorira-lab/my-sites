@@ -312,6 +312,12 @@ const games = [
     note:           "フィリピンを舞台にしたピクセルアート。Steam版は好評",
     link:           "https://untilthengame.com/",
     highlight:      false,
+    purchaseLinks:  {
+      SW1:        "https://www.amazon.co.jp/dp/B0FRMKFQ8H",
+      PS5:        "https://www.amazon.co.jp/dp/B0FRMK41F9",
+      SW1_deluxe: "https://www.amazon.co.jp/dp/B0FRMK9PCT",
+      PS5_deluxe: "https://www.amazon.co.jp/dp/B0FRMNKGS8",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule",
     sourceName:     "ファミ通",
     lastVerifiedAt: "2026-03-25",
