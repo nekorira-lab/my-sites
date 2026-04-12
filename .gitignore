@@ -1,3 +1,6 @@
 # Claude Code settings (may contain local paths)
 .claude/
 */.claude/
+
+# ローカル作業メモ（GitHub に上げない）
+TODO.md
