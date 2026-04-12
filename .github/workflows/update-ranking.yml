@@ -92,28 +92,30 @@ jobs:
 
             const itemsJs = items.map(item => {
               const rank  = Number(item.rank);
-              const title = item.title.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
-              const plat  = (item.platform || '').replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+              const title = item.title.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+              const plat  = (item.platform || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
               const sales = Number(item.salesCount);
-              return `    { rank: ${rank},  title: "${title}", platform: "${plat}", sales: ${sales} },`;
+              return '    { rank: ' + rank + ',  title: "' + title + '", platform: "' + plat + '", sales: ' + sales + ' },';
             }).join('\n');
 
-            return `/* ============================================================
-   ranking.js — ファミ通 週間ゲームソフト販売ランキング
-   参照元: https://www.famitsu.com/ranking/game-sales
-   ※ このファイルは GitHub Actions により毎週自動更新されます
-   ============================================================ */
-
-const weeklyRanking = {
-  period:     "${period}",
-  source:     "ファミ通",
-  sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "${today}",
-  items: [
-${itemsJs}
-  ],
-};
-`;
+            const lines = [];
+            lines.push('/* ============================================================');
+            lines.push('   ranking.js \u2014 \u30d5\u30a1\u30df\u901a \u9031\u9593\u30b2\u30fc\u30e0\u30bd\u30d5\u30c8\u8ca9\u58f2\u30e9\u30f3\u30ad\u30f3\u30b0');
+            lines.push('   \u53c2\u7167\u5143: https://www.famitsu.com/ranking/game-sales');
+            lines.push('   \u203b \u3053\u306e\u30d5\u30a1\u30a4\u30eb\u306f GitHub Actions \u306b\u3088\u308a\u6bce\u9031\u81ea\u52d5\u66f4\u65b0\u3055\u308c\u307e\u3059');
+            lines.push('   ============================================================ */');
+            lines.push('');
+            lines.push('const weeklyRanking = {');
+            lines.push('  period:     "' + period + '",');
+            lines.push('  source:     "\u30d5\u30a1\u30df\u901a",');
+            lines.push('  sourceUrl:  "https://www.famitsu.com/ranking/game-sales",');
+            lines.push('  updatedAt:  "' + today + '",');
+            lines.push('  items: [');
+            lines.push(itemsJs);
+            lines.push('  ],');
+            lines.push('};');
+            lines.push('');
+            return lines.join('\n');
           }
 
           // ── メイン ──────────────────────────────────────────
