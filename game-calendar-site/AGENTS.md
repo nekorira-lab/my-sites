@@ -27,11 +27,13 @@ my-sites/
 
 ### ステップ 1: 対象週を設定する
 
-`game-calendar-site/tools/compare-week.js` の先頭にある変数を書き換える:
+`compare-week.js` はCLI引数で対象週を指定できる（ファイルの書き換え不要）:
 
-```js
-const COMPARE_WEEK_START = 'YYYY-MM-DD';  // 対象週の月曜日
+```sh
+node tools/compare-week.js 2026-04-06
 ```
+
+引数を省略した場合はファイル内のデフォルト値が使われる。
 
 ### ステップ 2: ファミ通からタイトルを収集する
 
@@ -64,7 +66,7 @@ const REFERENCE_GAMES = [
 
 ```sh
 cd game-calendar-site
-node tools/compare-week.js
+node tools/compare-week.js 2026-04-06
 ```
 
 出力を確認し、「❌ 抜けタイトル」に列挙されたエントリを `games.js` に追加する。
@@ -254,7 +256,7 @@ purchaseLinks: {
 ### ステップ 5: 再確認
 
 ```sh
-node tools/compare-week.js
+node tools/compare-week.js 2026-04-06
 ```
 
 「抜けタイトル: 0 件」になれば OK。
@@ -265,13 +267,27 @@ node tools/compare-week.js
 
 ---
 
-## 今回の更新対象
+## 更新対象週の自動判定
 
-現在 `compare-week.js` は `2026-03-23` 週で止まっています。
-以下の週を順番に更新してください:
+AGENTS.md に固定の週は書かない。実行時に以下の手順で対象週を動的に決定する。
 
-1. `2026-03-30`（3/30〜4/5）
-2. `2026-04-06`（4/6〜4/12）
+### 判定手順
+
+1. `docs/assets/js/games.js` の先頭コメントから `@last-weekly-check:` の値を読み取る
+   - 例: `@last-weekly-check: 2026-04-10` → チェック済み最終日は `2026-04-10`
+2. その日付が属する週の **翌週月曜日** を更新開始週とする
+3. **本日の日付が属する週の月曜日** を更新終了週とする
+4. 開始週 〜 終了週を順番に（1週ずつ）ステップ 1〜5 を繰り返す
+5. 全週の更新完了後、`@last-weekly-check:` の値を**今回確認した最終日**に更新する
+
+### 例
+
+- `@last-weekly-check: 2026-04-10`（4/6週まで済み）
+- 本日が `2026-04-19`（日）
+- → 更新対象: `2026-04-13` の 1 週分
+- → 完了後に `@last-weekly-check: 2026-04-19` に更新する
+
+開始週 > 終了週（すでに最新週まで済み）の場合は更新不要。その旨を報告して終了する。
 
 ---
 
