@@ -52,7 +52,7 @@
    - 旧data.jsから移植: sourceName: "旧data.js"（要一次情報で要確認）
 
    ───────────────────────────────────────────────────────────
-   @last-weekly-check: 2026-04-10
+   @last-weekly-check: 2026-04-12
    （ファミ通週次チェック済みの最終日。更新ツールが参照する。手動で変更しないこと）
    @last-monthly-check: 2026-04-12
    （月次先行登録の最終実施日。更新ツールが参照する。手動で変更しないこと）
@@ -752,8 +752,96 @@ const games = [
     sourceName:     "任天堂公式",
     lastVerifiedAt: null,
   },
+  {
+    id:             "007-first-light",
+    title:          "007 First Light",
+    date:           "2026-05-27",
+    platforms:      ["PS5", "XBX", "PC"],
+    genre:          "アクションアドベンチャー",
+    note:           null,
+    link:           "https://007firstlightgame.com/",
+    highlight:      true,
+    sourceUrl:      "https://www.famitsu.com/schedule/all-platforms/202605",
+    sourceName:     "ファミ通 / IO Interactive公式",
+    lastVerifiedAt: "2026-04-12",
+  },
+
+  // ── 6月 ──────────────────────────────────────────────────
+  {
+    id:             "ff7-rebirth-2026",
+    title:          "ファイナルファンタジーVII リバース",
+    date:           "2026-06-03",
+    platforms:      ["SW2", "XBX", "PS5", "PC"],
+    genre:          "RPG",
+    note:           "後発対応機種あり（一部機種は先行発売済み）",
+    link:           "https://www.jp.square-enix.com/ffvii_rebirth/",
+    highlight:      true,
+    releasedPlatforms: ["PS5", "PC"],
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0GKNXC3WY",
+    },
+    sourceUrl:      "https://www.jp.square-enix.com/ffvii_rebirth/",
+    sourceName:     "Square Enix公式",
+    lastVerifiedAt: "2026-04-12",
+  },
+  {
+    id:             "pawapuro-2026-2027",
+    title:          "パワフルプロ野球2026-2027",
+    date:           "2026-06-11",
+    platforms:      ["SW1", "PS4"],
+    genre:          "スポーツ",
+    note:           null,
+    link:           "https://www.konami.com/pawa/2026-2027/",
+    highlight:      true,
+    purchaseLinks:  {
+      SW1: "https://www.amazon.co.jp/dp/B0GQSRSWJK",
+    },
+    sourceUrl:      "https://www.konami.com/pawa/2026-2027/",
+    sourceName:     "KONAMI公式",
+    lastVerifiedAt: "2026-04-12",
+  },
+  {
+    id:             "elliot-millennium-tales",
+    title:          "冒険家エリオットの千年物語",
+    date:           "2026-06-18",
+    platforms:      ["SW2", "PS5", "XBX"],
+    genre:          "アクションRPG",
+    note:           null,
+    link:           "https://www.jp.square-enix.com/el1000/",
+    highlight:      true,
+    sourceUrl:      "https://www.jp.square-enix.com/el1000/",
+    sourceName:     "Square Enix公式",
+    lastVerifiedAt: "2026-04-12",
+  },
 
   // ── 7月 ──────────────────────────────────────────────────
+  {
+    id:             "granblue-relink-endless-ragnarok",
+    title:          "GRANBLUE FANTASY: Relink - Endless Ragnarok",
+    date:           "2026-07-09",
+    platforms:      ["SW2", "PS5", "PS4", "PC"],
+    genre:          "アクションRPG",
+    note:           null,
+    link:           "https://relink-ragnarok.granbluefantasy.com/ja/",
+    highlight:      true,
+    sourceUrl:      "https://relink-ragnarok.granbluefantasy.com/ja/",
+    sourceName:     "Cygames公式",
+    lastVerifiedAt: "2026-04-12",
+  },
+  {
+    id:             "digimon-story-time-stranger",
+    title:          "デジモンストーリー タイムストレンジャー",
+    date:           "2026-07-09",
+    platforms:      ["SW2", "SW1", "PS5", "XBX", "PC"],
+    genre:          "RPG",
+    note:           "後発対応機種あり（一部機種は先行発売済み）",
+    link:           "https://digimonstory-ts.bn-ent.net/",
+    highlight:      true,
+    releasedPlatforms: ["PS5", "XBX", "PC"],
+    sourceUrl:      "https://digimonstory-ts.bn-ent.net/",
+    sourceName:     "Bandai Namco公式",
+    lastVerifiedAt: "2026-04-12",
+  },
   {
     id:             "culdcept-begins",
     title:          "カルドセプト ビギンズ",
@@ -770,6 +858,34 @@ const games = [
     sourceUrl:      null,
     sourceName:     null,
     lastVerifiedAt: null,
+  },
+
+  // ── 8月 ──────────────────────────────────────────────────
+  {
+    id:             "marvel-tokon-fighting-souls",
+    title:          "MARVEL Tōkon: Fighting Souls",
+    date:           "2026-08-07",
+    platforms:      ["PS5", "PC"],
+    genre:          "格闘",
+    note:           null,
+    link:           "https://www.playstation.com/ja-jp/games/marvel-tokon-fighting-souls/",
+    highlight:      true,
+    sourceUrl:      "https://www.famitsu.com/schedule/all-platforms/202608",
+    sourceName:     "ファミ通 / PlayStation公式",
+    lastVerifiedAt: "2026-04-12",
+  },
+  {
+    id:             "mgs-master-collection-vol2",
+    title:          "METAL GEAR SOLID: MASTER COLLECTION Vol.2",
+    date:           "2026-08-27",
+    platforms:      ["SW2", "SW1", "PS5", "XBX", "PC"],
+    genre:          "ステルスアクション",
+    note:           null,
+    link:           "https://www.konami.com/mg/mc2/asia/ja/",
+    highlight:      true,
+    sourceUrl:      "https://www.konami.com/mg/mc2/asia/ja/",
+    sourceName:     "KONAMI公式",
+    lastVerifiedAt: "2026-04-12",
   },
 
   // ── 11月 ─────────────────────────────────────────────────
@@ -791,6 +907,19 @@ const games = [
      日程未定
   ═══════════════════════════════════════════════════════════ */
 
+  {
+    id:             "007-first-light-late-2026",
+    title:          "007 First Light",
+    date:           null,
+    platforms:      ["SW2"],
+    genre:          "アクションアドベンチャー",
+    note:           "2026年夏後半発売予定",
+    link:           "https://007firstlightgame.com/",
+    highlight:      true,
+    sourceUrl:      "https://game.watch.impress.co.jp/docs/news/2100532.html",
+    sourceName:     "GAME Watch / IO Interactive公式",
+    lastVerifiedAt: "2026-04-12",
+  },
   {
     id:             "fe-fortunes-weave",
     title:          "ファイアーエムブレム 万紫千紅",
