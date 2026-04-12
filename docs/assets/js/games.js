@@ -550,6 +550,9 @@ const games = [
     note:           null,
     link:           "https://www.d3p.co.jp/simple_switch2/01_mahjong/",
     highlight:      false,
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0GFWCR2RN",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule",
     sourceName:     "ファミ通",
     lastVerifiedAt: "2026-04-04",
@@ -563,6 +566,9 @@ const games = [
     note:           null,
     link:           null,
     highlight:      false,
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0GFW9DDNH",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule",
     sourceName:     "ファミ通",
     lastVerifiedAt: "2026-04-04",
@@ -589,6 +595,9 @@ const games = [
     note:           "PS5版 / ダウンロード専売",
     link:           null,
     highlight:      true,
+    purchaseLinks:  {
+      PS5: "https://www.amazon.co.jp/dp/B0GSS1VQMB",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule",
     sourceName:     "ファミ通",
     lastVerifiedAt: "2026-04-04",
@@ -619,6 +628,9 @@ const games = [
     note:           null,
     link:           "https://cosen-net.com/aureole/",
     highlight:      false,
+    purchaseLinks:  {
+      PS5: "https://www.amazon.co.jp/dp/B0G4W34SCR",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule",
     sourceName:     "ファミ通",
     lastVerifiedAt: "2026-04-04",
@@ -661,6 +673,9 @@ const games = [
     note:           null,
     link:           "https://sonic.sega.jp/SonicRacingCrossWorlds/",
     highlight:      true,
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0GH8GHJG6",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule",
     sourceName:     "ファミ通",
     lastVerifiedAt: "2026-04-04",
@@ -813,6 +828,10 @@ const games = [
     note:           null,
     link:           "https://www.jp.square-enix.com/el1000/",
     highlight:      true,
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0GKNMG6KQ",
+      PS5: "https://www.amazon.co.jp/dp/B0GKNP6PBJ",
+    },
     sourceUrl:      "https://www.jp.square-enix.com/el1000/",
     sourceName:     "Square Enix公式",
     lastVerifiedAt: "2026-04-12",
@@ -844,6 +863,10 @@ const games = [
     note:           null,
     link:           "https://relink-ragnarok.granbluefantasy.com/ja/",
     highlight:      true,
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0GLVCPFWQ",
+      PS5: "https://www.amazon.co.jp/dp/B0GLVLBLMB",
+    },
     sourceUrl:      "https://relink-ragnarok.granbluefantasy.com/ja/",
     sourceName:     "Cygames公式",
     lastVerifiedAt: "2026-04-12",
@@ -858,6 +881,9 @@ const games = [
     link:           "https://digimonstory-ts.bn-ent.net/",
     highlight:      true,
     releasedPlatforms: ["PS5", "XBX", "PC"],
+    purchaseLinks:  {
+      PS5: "https://www.amazon.co.jp/dp/B0FBVXBMPD",
+    },
     sourceUrl:      "https://digimonstory-ts.bn-ent.net/",
     sourceName:     "Bandai Namco公式",
     lastVerifiedAt: "2026-04-12",
@@ -890,6 +916,9 @@ const games = [
     note:           null,
     link:           "https://www.playstation.com/ja-jp/games/marvel-tokon-fighting-souls/",
     highlight:      true,
+    purchaseLinks:  {
+      PS5: "https://www.amazon.co.jp/dp/B0GNSC4W5F",
+    },
     sourceUrl:      "https://www.famitsu.com/schedule/all-platforms/202608",
     sourceName:     "ファミ通 / PlayStation公式",
     lastVerifiedAt: "2026-04-12",
@@ -903,6 +932,9 @@ const games = [
     note:           null,
     link:           "https://www.konami.com/mg/mc2/asia/ja/",
     highlight:      true,
+    purchaseLinks:  {
+      SW2: "https://www.amazon.co.jp/dp/B0GNNGJNRZ",
+    },
     sourceUrl:      "https://www.konami.com/mg/mc2/asia/ja/",
     sourceName:     "KONAMI公式",
     lastVerifiedAt: "2026-04-12",
