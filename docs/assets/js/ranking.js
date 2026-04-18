@@ -8,7 +8,7 @@ const weeklyRanking = {
   period:     "2026年03月30日～2026年04月05日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-04-12",
+  updatedAt:  "2026-04-17",
   items: [
     { rank: 1,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 45484 },
     { rank: 2,  title: "マリオカート ワールド", platform: "Switch 2", sales: 8131 },
