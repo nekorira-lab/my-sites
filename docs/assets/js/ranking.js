@@ -8,7 +8,7 @@ const weeklyRanking = {
   period:     "2026年05月04日～2026年05月10日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-05-15",
+  updatedAt:  "2026-05-22",
   items: [
     { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 149245 },
     { rank: 2,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 28312 },
