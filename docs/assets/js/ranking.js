@@ -5,20 +5,20 @@
    ============================================================ */
 
 const weeklyRanking = {
-  period:     "2026年05月04日～2026年05月10日",
+  period:     "2026年05月18日～2026年05月24日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-05-22",
+  updatedAt:  "2026-05-29",
   items: [
-    { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 149245 },
-    { rank: 2,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 28312 },
-    { rank: 3,  title: "マリオカート ワールド", platform: "Switch 2", sales: 10941 },
-    { rank: 4,  title: "桃太郎電鉄2 ～あなたの町も きっとある～ 東日本編＋西日本編", platform: "Switch", sales: 6446 },
-    { rank: 5,  title: "Minecraft", platform: "Switch", sales: 5516 },
-    { rank: 6,  title: "スーパーマリオギャラクシー ＋ スーパーマリオギャラクシー 2", platform: "Switch", sales: 5290 },
-    { rank: 7,  title: "Nintendo Switch Sports", platform: "Switch", sales: 5073 },
-    { rank: 8,  title: "あつまれ どうぶつの森 Nintendo Switch 2 Edition", platform: "Switch 2", sales: 5011 },
-    { rank: 9,  title: "あつまれ どうぶつの森", platform: "Switch", sales: 4015 },
-    { rank: 10,  title: "大乱闘スマッシュブラザーズ SPECIAL", platform: "Switch", sales: 3825 },
+    { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 64899 },
+    { rank: 2,  title: "ヨッシーとフカシギの図鑑", platform: "Switch 2", sales: 39661 },
+    { rank: 3,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 22821 },
+    { rank: 4,  title: "マリオカート ワールド", platform: "Switch 2", sales: 13699 },
+    { rank: 5,  title: "Tales of ARISE - Beyond the Dawn Edition", platform: "Switch 2", sales: 11603 },
+    { rank: 6,  title: "Pokemon LEGENDS Z-A Nintendo Switch 2 Edition", platform: "Switch 2", sales: 5706 },
+    { rank: 7,  title: "Minecraft", platform: "Switch", sales: 3488 },
+    { rank: 8,  title: "あつまれ どうぶつの森 Nintendo Switch 2 Edition", platform: "Switch 2", sales: 3316 },
+    { rank: 9,  title: "スーパー マリオパーティ ジャンボリー Nintendo Switch 2 Edition ＋ ジャンボリーTV", platform: "Switch 2", sales: 2900 },
+    { rank: 10,  title: "カービィのエアライダー", platform: "Switch 2", sales: 2866 },
   ],
 };
