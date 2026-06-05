@@ -5,20 +5,20 @@
    ============================================================ */
 
 const weeklyRanking = {
-  period:     "2026年05月18日～2026年05月24日",
+  period:     "2026年05月25日～2026年05月31日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-05-29",
+  updatedAt:  "2026-06-05",
   items: [
-    { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 64899 },
-    { rank: 2,  title: "ヨッシーとフカシギの図鑑", platform: "Switch 2", sales: 39661 },
-    { rank: 3,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 22821 },
-    { rank: 4,  title: "マリオカート ワールド", platform: "Switch 2", sales: 13699 },
-    { rank: 5,  title: "Tales of ARISE - Beyond the Dawn Edition", platform: "Switch 2", sales: 11603 },
-    { rank: 6,  title: "Pokemon LEGENDS Z-A Nintendo Switch 2 Edition", platform: "Switch 2", sales: 5706 },
-    { rank: 7,  title: "Minecraft", platform: "Switch", sales: 3488 },
-    { rank: 8,  title: "あつまれ どうぶつの森 Nintendo Switch 2 Edition", platform: "Switch 2", sales: 3316 },
-    { rank: 9,  title: "スーパー マリオパーティ ジャンボリー Nintendo Switch 2 Edition ＋ ジャンボリーTV", platform: "Switch 2", sales: 2900 },
-    { rank: 10,  title: "カービィのエアライダー", platform: "Switch 2", sales: 2866 },
+    { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 52483 },
+    { rank: 2,  title: "007 ファースト・ライト", platform: "PS5", sales: 20690 },
+    { rank: 3,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 14122 },
+    { rank: 4,  title: "ヨッシーとフカシギの図鑑", platform: "Switch 2", sales: 12701 },
+    { rank: 5,  title: "うたわれるもの 白への道標", platform: "PS5", sales: 6225 },
+    { rank: 6,  title: "マリオカート ワールド", platform: "Switch 2", sales: 5865 },
+    { rank: 7,  title: "デモンキルデモン ～黄泉1984～", platform: "Switch", sales: 3719 },
+    { rank: 8,  title: "Minecraft", platform: "Switch", sales: 3480 },
+    { rank: 9,  title: "うたわれるもの 白への道標", platform: "Switch 2", sales: 2863 },
+    { rank: 10,  title: "スーパー マリオパーティ ジャンボリー Nintendo Switch 2 Edition ＋ ジャンボリーTV", platform: "Switch 2", sales: 2858 },
   ],
 };
