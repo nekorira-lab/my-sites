@@ -8,7 +8,7 @@ const weeklyRanking = {
   period:     "2026年05月25日～2026年05月31日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-06-05",
+  updatedAt:  "2026-06-12",
   items: [
     { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 52483 },
     { rank: 2,  title: "007 ファースト・ライト", platform: "PS5", sales: 20690 },
