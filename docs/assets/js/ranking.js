@@ -5,20 +5,20 @@
    ============================================================ */
 
 const weeklyRanking = {
-  period:     "2026年05月25日～2026年05月31日",
+  period:     "2026年06月01日～2026年06月07日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-06-12",
+  updatedAt:  "2026-06-19",
   items: [
-    { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 52483 },
-    { rank: 2,  title: "007 ファースト・ライト", platform: "PS5", sales: 20690 },
-    { rank: 3,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 14122 },
-    { rank: 4,  title: "ヨッシーとフカシギの図鑑", platform: "Switch 2", sales: 12701 },
-    { rank: 5,  title: "うたわれるもの 白への道標", platform: "PS5", sales: 6225 },
-    { rank: 6,  title: "マリオカート ワールド", platform: "Switch 2", sales: 5865 },
-    { rank: 7,  title: "デモンキルデモン ～黄泉1984～", platform: "Switch", sales: 3719 },
-    { rank: 8,  title: "Minecraft", platform: "Switch", sales: 3480 },
-    { rank: 9,  title: "うたわれるもの 白への道標", platform: "Switch 2", sales: 2863 },
-    { rank: 10,  title: "スーパー マリオパーティ ジャンボリー Nintendo Switch 2 Edition ＋ ジャンボリーTV", platform: "Switch 2", sales: 2858 },
+    { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 50151 },
+    { rank: 2,  title: "ファイナルファンタジーVII リバース", platform: "Switch 2", sales: 30657 },
+    { rank: 3,  title: "eFootball Kick-Off！", platform: "Switch 2", sales: 20047 },
+    { rank: 4,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 10794 },
+    { rank: 5,  title: "ヨッシーとフカシギの図鑑", platform: "Switch 2", sales: 8191 },
+    { rank: 6,  title: "マリオカート ワールド", platform: "Switch 2", sales: 7381 },
+    { rank: 7,  title: "007 ファースト・ライト", platform: "PS5", sales: 4388 },
+    { rank: 8,  title: "Minecraft", platform: "Switch", sales: 4381 },
+    { rank: 9,  title: "A列車で行こう9 Evolution", platform: "Switch 2", sales: 3550 },
+    { rank: 10,  title: "アストロボット", platform: "PS5", sales: 3460 },
   ],
 };
