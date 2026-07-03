@@ -8,7 +8,7 @@ const weeklyRanking = {
   period:     "2026年06月15日～2026年06月21日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-06-26",
+  updatedAt:  "2026-07-03",
   items: [
     { rank: 1,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 34957 },
     { rank: 2,  title: "パワフルプロ野球2026-2027", platform: "Switch", sales: 28409 },
