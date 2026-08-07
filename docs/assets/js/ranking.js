@@ -8,7 +8,7 @@ const weeklyRanking = {
   period:     "2026年07月20日～2026年07月26日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-07-31",
+  updatedAt:  "2026-08-07",
   items: [
     { rank: 1,  title: "スプラトゥーン レイダース", platform: "Switch 2", sales: 474684 },
     { rank: 2,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 78355 },
