@@ -5,20 +5,20 @@
    ============================================================ */
 
 const weeklyRanking = {
-  period:     "2026年07月27日～2026年08月02日",
+  period:     "2026年08月10日～2026年08月16日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-08-21",
+  updatedAt:  "2026-08-28",
   items: [
-    { rank: 1,  title: "スプラトゥーン レイダース", platform: "Switch 2", sales: 73542 },
-    { rank: 2,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 59884 },
-    { rank: 3,  title: "ほの暮しの庭", platform: "Switch 2", sales: 21965 },
-    { rank: 4,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 18306 },
-    { rank: 5,  title: "テニスの王子様 も～っと 学園祭の王子様 ▽-40 and more...", platform: "Switch", sales: 16996 },
-    { rank: 6,  title: "テニスの王子様 ぎゅ～っと！ ドキドキサバイバル Tie break ▽ game", platform: "Switch", sales: 16987 },
-    { rank: 7,  title: "ほの暮しの庭", platform: "Switch", sales: 12458 },
-    { rank: 8,  title: "BLUE REFLECTION Quartet： 少女たちのキセキ", platform: "Switch", sales: 7880 },
-    { rank: 9,  title: "BLUE REFLECTION Quartet： 少女たちのキセキ", platform: "PS5", sales: 7019 },
-    { rank: 10,  title: "パワフルプロ野球2026-2027", platform: "Switch", sales: 5928 },
+    { rank: 1,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 83536 },
+    { rank: 2,  title: "スプラトゥーン レイダース", platform: "Switch 2", sales: 32535 },
+    { rank: 3,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 25671 },
+    { rank: 4,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 7788 },
+    { rank: 5,  title: "パワフルプロ野球2026-2027", platform: "Switch", sales: 7569 },
+    { rank: 6,  title: "Minecraft", platform: "Switch", sales: 7184 },
+    { rank: 7,  title: "マリオカート ワールド", platform: "Switch 2", sales: 6280 },
+    { rank: 8,  title: "Beast of Reincarnation（ビースト・オブ・リンカネーション）", platform: "PS5", sales: 5147 },
+    { rank: 9,  title: "がんばれゴエモン大集合！", platform: "Switch", sales: 4085 },
+    { rank: 10,  title: "eFootball Kick-Off！", platform: "Switch 2", sales: 4082 },
   ],
 };
