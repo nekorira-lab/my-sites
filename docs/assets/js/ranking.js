@@ -5,20 +5,20 @@
    ============================================================ */
 
 const weeklyRanking = {
-  period:     "2026年08月17日～2026年08月23日",
+  period:     "2026年08月31日～2026年09月06日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-09-04",
+  updatedAt:  "2026-09-11",
   items: [
-    { rank: 1,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 37402 },
-    { rank: 2,  title: "スプラトゥーン レイダース", platform: "Switch 2", sales: 13224 },
-    { rank: 3,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 12558 },
-    { rank: 4,  title: "シュタインズ・ゲート リブート", platform: "Switch 2", sales: 7613 },
-    { rank: 5,  title: "シュタインズ・ゲート リブート", platform: "PS5", sales: 4002 },
-    { rank: 6,  title: "Minecraft", platform: "Switch", sales: 3953 },
-    { rank: 7,  title: "パワフルプロ野球2026-2027", platform: "Switch", sales: 3718 },
-    { rank: 8,  title: "ぽこ あ ポケモン", platform: "Switch 2", sales: 3701 },
-    { rank: 9,  title: "シュタインズ・ゲート リブート", platform: "Switch", sales: 3538 },
-    { rank: 10,  title: "Starsand Island（スターサンド・アイランド）", platform: "Switch 2", sales: 3415 },
+    { rank: 1,  title: "鬼武者 Way of the Sword", platform: "PS5", sales: 76530 },
+    { rank: 2,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 29360 },
+    { rank: 3,  title: "鬼武者 Way of the Sword", platform: "Switch 2", sales: 19499 },
+    { rank: 4,  title: "スプラトゥーン レイダース", platform: "Switch 2", sales: 10267 },
+    { rank: 5,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 9880 },
+    { rank: 6,  title: "ELDEN RING Tarnished Edition", platform: "Switch 2", sales: 6559 },
+    { rank: 7,  title: "The Blood of Dawnwalker", platform: "PS5", sales: 4618 },
+    { rank: 8,  title: "マリオカート ワールド", platform: "Switch 2", sales: 4259 },
+    { rank: 9,  title: "オービタルズ Orbitals", platform: "Switch 2", sales: 3949 },
+    { rank: 10,  title: "Minecraft", platform: "Switch", sales: 3754 },
   ],
 };
