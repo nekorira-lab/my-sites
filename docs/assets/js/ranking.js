@@ -8,7 +8,7 @@ const weeklyRanking = {
   period:     "2026年09月07日～2026年09月13日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-09-18",
+  updatedAt:  "2026-09-25",
   items: [
     { rank: 1,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 24756 },
     { rank: 2,  title: "鬼武者 Way of the Sword", platform: "PS5", sales: 19654 },
