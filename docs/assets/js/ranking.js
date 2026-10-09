@@ -8,7 +8,7 @@ const weeklyRanking = {
   period:     "2026年09月21日～2026年09月27日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-10-02",
+  updatedAt:  "2026-10-09",
   items: [
     { rank: 1,  title: "ダービースタリオン2", platform: "Switch 2", sales: 29336 },
     { rank: 2,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 27309 },
