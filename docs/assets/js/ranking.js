@@ -5,20 +5,20 @@
    ============================================================ */
 
 const weeklyRanking = {
-  period:     "2026年10月12日～2026年10月18日",
+  period:     "2026年10月19日～2026年10月25日",
   source:     "ファミ通",
   sourceUrl:  "https://www.famitsu.com/ranking/game-sales",
-  updatedAt:  "2026-10-30",
+  updatedAt:  "2026-11-06",
   items: [
-    { rank: 1,  title: "テイルズ オブ エターニア リマスター", platform: "Switch 2", sales: 17911 },
-    { rank: 2,  title: "Castlevania： Belmont's Curse（キャッスルヴァニア ベルモンドカース） Midnight Edition", platform: "Switch", sales: 15630 },
-    { rank: 3,  title: "テイルズ オブ エターニア リマスター", platform: "Switch", sales: 14003 },
-    { rank: 4,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 13084 },
-    { rank: 5,  title: "テイルズ オブ エターニア リマスター", platform: "PS5", sales: 10390 },
-    { rank: 6,  title: "Castlevania： Belmont's Curse（キャッスルヴァニア ベルモンドカース） Midnight Edition", platform: "PS5", sales: 7621 },
-    { rank: 7,  title: "ACE COMBAT 8： WINGS OF THEVE（エースコンバット8 ウイングス・オブ・シーヴ）", platform: "PS5", sales: 5834 },
-    { rank: 8,  title: "キングダム ハーツ コレクション［I～III］", platform: "Switch 2", sales: 5404 },
-    { rank: 9,  title: "ファイアーエムブレム 万紫千紅", platform: "Switch 2", sales: 5221 },
-    { rank: 10,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 5212 },
+    { rank: 1,  title: "Nintendo Switch Sports Resort", platform: "Switch 2", sales: 64632 },
+    { rank: 2,  title: "ファイナルファンタジー レゾナンス", platform: "Switch 2", sales: 52268 },
+    { rank: 3,  title: "ファイナルファンタジー レゾナンス", platform: "PS5", sales: 50452 },
+    { rank: 4,  title: "ファイナルファンタジー レゾナンス", platform: "Switch", sales: 30471 },
+    { rank: 5,  title: "コール オブ デューティ モダン・ウォーフェア4", platform: "PS5", sales: 12816 },
+    { rank: 6,  title: "リズム天国 ミラクルスターズ", platform: "Switch", sales: 9671 },
+    { rank: 7,  title: "ONE PIECE 海のごちそうレストラン", platform: "Switch 2", sales: 5631 },
+    { rank: 8,  title: "トモダチコレクション わくわく生活", platform: "Switch", sales: 4682 },
+    { rank: 9,  title: "ファイアーエムブレム 万紫千紅", platform: "Switch 2", sales: 4393 },
+    { rank: 10,  title: "マリオカート ワールド", platform: "Switch 2", sales: 3682 },
   ],
 };
